@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
+import 'package:gangg_store/features/splash/splash_screen.dart';
 
 import 'core/utils/default_elevated_button.dart';
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
 themeMode: ThemeMode.light,
-      home:,
+      home: const SplashScreen (),
     );
   }
 }

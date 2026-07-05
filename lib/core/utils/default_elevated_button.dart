@@ -37,12 +37,16 @@ class DefaultElevatedButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          // if (prefixSvgPath != null) ...[
+          //   SvgPicture.asset(prefixSvgPath!, width: 24, height: 24),
+          //   SizedBox(width: width * 0.020),
+          // ],
+          Text(label, style: text.titleLarge?.copyWith(color: AppColors.white)),
           if (prefixSvgPath != null) ...[
-            SvgPicture.asset(prefixSvgPath!, width: 24, height: 24),
-
             SizedBox(width: width * 0.020),
+            SvgPicture.asset(prefixSvgPath!, width: 20, height: 20),
+            // SizedBox(width: width * 0.020),
           ],
-          Text(label, style: text.titleLarge),
         ],
       ),
     );

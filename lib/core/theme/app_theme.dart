@@ -30,11 +30,11 @@ class AppTheme {
         color: AppColors.gray,
       ),
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.primary),
+        borderSide: BorderSide(color: AppColors.simony),
         borderRadius: BorderRadius.circular(16),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.primary),
+        borderSide: BorderSide(color: AppColors.simony),
         borderRadius: BorderRadius.circular(16),
       ),
       errorBorder: OutlineInputBorder(
@@ -52,9 +52,9 @@ class AppTheme {
 
     textTheme: TextTheme(
       headlineSmall: TextStyle(
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: FontWeight.bold,
-        color: AppColors.white,
+        color: AppColors.black,
       ),
       titleLarge: TextStyle(
         fontSize: 20,
@@ -69,7 +69,7 @@ class AppTheme {
       titleSmall: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w400,
-        color: AppColors.white,
+        color: AppColors.black,
       ),
       displaySmall: TextStyle(
         fontSize: 36,

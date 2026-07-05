@@ -12,6 +12,7 @@ class DefaultTextFormField extends StatefulWidget {
   String? prefixIconImageName;
   String? Function(String?)? validator;
   bool isPassword;
+  final Color? fillColor;
 
   DefaultTextFormField({
     super.key,
@@ -21,6 +22,7 @@ class DefaultTextFormField extends StatefulWidget {
     this.prefixIconImageName,
     this.validator,
     this.isPassword = false,
+    this.fillColor,
   });
 
   @override
@@ -35,19 +37,29 @@ class _DefaultTextFormFieldState extends State<DefaultTextFormField> {
     return TextFormField(
       controller: widget.controller,
       onChanged: widget.onChanged,
-      style: Theme.of(context).textTheme.titleMedium,
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+        color:
+        Theme.of(context).brightness == Brightness.dark ? AppColors.darkGray : AppColors.darkGray,
+      ),
       decoration: InputDecoration(
         hintText: widget.hintText,
+        hintStyle: Theme.of(context).textTheme.titleMedium
+            ?.copyWith(
+          color:
+          Theme.of(context).brightness == Brightness.dark ? AppColors.darkGray : AppColors.darkGray,
+        ),
+        filled: true,
+        fillColor: widget.fillColor ?? AppColors.simony, //
+        iconColor: AppColors.darkGray,
         prefixIcon:
             widget.prefixIconImageName == null
                 ? null
                 : SvgPicture.asset(
                   'assets/icons/${widget.prefixIconImageName}.svg',
                   colorFilter: ColorFilter.mode(
-                    Theme.of(context).brightness == Brightness.dark ? AppColors.gray : AppColors.gray,
+                    Theme.of(context).brightness == Brightness.dark ? AppColors.darkGray : AppColors.darkGray,
                     BlendMode.srcIn,
                   ),
-
                   height: 24,
                   width: 24,
                   fit: BoxFit.scaleDown,
@@ -65,8 +77,8 @@ class _DefaultTextFormFieldState extends State<DefaultTextFormField> {
                         : Icons.visibility_outlined,
                     color:
                         Theme.of(context).brightness == Brightness.dark
-                            ? AppColors.gray
-                            : AppColors.gray,
+                            ? AppColors.darkGray
+                            : AppColors.darkGray,
                   ),
                 )
                 : null,
@@ -74,7 +86,7 @@ class _DefaultTextFormFieldState extends State<DefaultTextFormField> {
       validator: widget.validator,
       obscureText: isObscure,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      onTapOutside: (_)=> FocusManager.instance.primaryFocus?.unfocus(),
+      // onTapOutside: (_)=> FocusManager.instance.primaryFocus?.unfocus(),
 
 
     );

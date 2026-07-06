@@ -157,7 +157,7 @@ class AppTheme {
       titleMedium: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.bold,
-        color: AppColors.white,
+        color: AppColors.black,
       ),
       titleSmall: TextStyle(
         fontSize: 14,

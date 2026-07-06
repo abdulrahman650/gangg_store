@@ -24,38 +24,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final phoneNumberController = TextEditingController();
   final passController = TextEditingController();
 
-  bool _isDataLoaded = false;
 
-  Widget svgIcon(
-      String name, {
-        double size = 22,
-        Color? color,
-      }) {
-    return SvgPicture.asset(
-      'assets/icons/$name.svg',
-      width: size,
-      height: size,
-      colorFilter: color == null
-          ? null
-          : ColorFilter.mode(
-        color,
-        BlendMode.srcIn,
-      ),
-    );
-  }
 
-  Widget pngIcon(
-      String name, {
-        double size = 22,
-      }) {
-    return Image.asset(
-      'assets/icons/$name.png',
-      width: size,
-      height: size,
-      fit: BoxFit.contain,
-      filterQuality: FilterQuality.high,
-    );
-  }
+
   @override
   void dispose() {
     fullNameController.dispose();
@@ -168,9 +139,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               shape: BoxShape.circle,
                             ),
                             child: Center(
-                              child: svgIcon(
-                                'camera',
-                                size: 15,
+                              child: SvgPicture.asset(
+                                'assets/icons/camera.svg',
+                                width: 15,
                                 color: Colors.white,
                               ),
                             ),
@@ -249,37 +220,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: CircularProgressIndicator(),
                     )
                         : const LogoutButton(),
-                    // SizedBox(
-                    //   width: double.infinity,
-                    //   height: 58,
-                    //   child: OutlinedButton(
-                    //     onPressed: () {},
-                    //     style: OutlinedButton.styleFrom(
-                    //       side: const BorderSide(
-                    //         color: ProfileStyles.redLogout,
-                    //         width: 1.5,
-                    //       ),
-                    //       shape: RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.circular(16),
-                    //       ),
-                    //     ),
-                    //     child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       children: [
-                    //         svgIcon(
-                    //           'loguot',
-                    //           size: 18,
-                    //           color: ProfileStyles.redLogout,
-                    //         ),
-                    //         const SizedBox(width: 8),
-                    //         Text(
-                    //           'Logout',
-                    //           style: ProfileStyles.logoutText(context),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
                     const SizedBox(height: 28),
                   ],
                 ),

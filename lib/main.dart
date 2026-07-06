@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:gangg_store/features/home/presentation/screens/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,9 +11,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-    themeMode: ThemeMode.light,
-      home: Scaffold(),
+      debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.light,
+      home: HomeScreen(),
     );
   }
 }
-

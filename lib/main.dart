@@ -7,7 +7,6 @@ import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
-import 'features/layout/presentation/screens/layout_screen.dart';
 import 'features/profile/presentation/cubit/profile_cubit.dart';
 
 Future<void> main() async {
@@ -15,6 +14,7 @@ Future<void> main() async {
 
   await CacheHelper.init();
   await setupServiceLocator();
+
 
   runApp(const MyApp());
 }
@@ -57,3 +57,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

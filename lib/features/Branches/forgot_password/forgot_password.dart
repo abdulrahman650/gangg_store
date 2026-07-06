@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
-import 'package:gangg_store/features/Branches/otp/otp.dart';
-import 'package:gangg_store/features/Branches/signin_and_guest/sign_in_screen.dart';
-import 'package:gangg_store/features/Branches/title_header/header.dart';
+import 'package:gangg_store/features/branches/otp/otp.dart';
+import 'package:gangg_store/features/branches/signin_and_guest/sign_in_screen.dart';
+import 'package:gangg_store/features/branches/title_header/header.dart';
 import 'package:gap/gap.dart';
 
 class ForgotPassword extends StatelessWidget {
@@ -20,7 +20,7 @@ class ForgotPassword extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset('assets/icons/rePassword.svg', width: 150, height: 150), 
+              Image.asset('assets/icons/Background+Shadow.png'), 
               Gap(10),
               Text("Forgot Password?",
                   style: TextStyle(
@@ -53,28 +53,36 @@ class ForgotPassword extends StatelessWidget {
               ),
                Gap(40),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Otp()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary, 
-                    minimumSize: const Size(double.infinity, 55), 
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-                child: const Text(
-                  'Send Code',
-                  style: TextStyle(
-                    color: AppColors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+              onPressed: () {
+                
+              },
+              style: ElevatedButton.styleFrom(
+                elevation: 1,
+                fixedSize: Size(500, 50),
+                backgroundColor: AppColors.primary,
               ),
+
+              child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Send Code',
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Gap(8),
+                    Icon(
+                      Icons.arrow_forward,
+                      color: AppColors.white,
+                      size: 22,
+                    ),
+                  ],
+                ),
+            
+            ),
               
               const SizedBox(height: 20),
               

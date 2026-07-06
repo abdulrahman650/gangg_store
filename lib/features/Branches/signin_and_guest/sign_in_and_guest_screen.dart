@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
-import 'package:gangg_store/features/Branches/signin_and_guest/sign_in_screen.dart';
+import 'package:gangg_store/features/branches/signin_and_guest/sign_in_screen.dart';
 import 'package:gap/gap.dart';
 //صفحه الاسبلاش التانيه
 class SignInAndGuestScreen extends StatelessWidget {

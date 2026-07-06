@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
-import 'package:gangg_store/features/Branches/signin_and_guest/sign_in_screen.dart';
-import 'package:gangg_store/features/Branches/title_header/header.dart';
+import 'package:gangg_store/features/branches/signin_and_guest/sign_in_screen.dart';
+import 'package:gangg_store/features/branches/title_header/header.dart';
 import 'package:gap/gap.dart';
 
 class RegisterScreen extends StatelessWidget {

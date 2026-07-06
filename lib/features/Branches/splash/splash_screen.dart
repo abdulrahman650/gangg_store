@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
-import 'package:gangg_store/features/Branches/onboarding/onboarding_screen.dart';
+import 'package:gangg_store/features/branches/onboarding/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

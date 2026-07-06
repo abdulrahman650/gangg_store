@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
-import 'package:gangg_store/features/onboarding/onboarding_screen1.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gangg_store/features/onboarding/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -28,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       if (status == AnimationStatus.completed) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const OnboardingScreen1()),
+          MaterialPageRoute(builder: (context) => const OnboardingScreen()),
         );
       }
     });
@@ -54,8 +53,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               children: [
                 const Spacer(), 
                 
-                SvgPicture.asset(
-                  "assets/svg/GangStoreLogo.svg",
+                Image.asset(
+                  "assets/icons/gangstorelogo.jpg",
                   height: 150,
                   width: 150,
                 ),

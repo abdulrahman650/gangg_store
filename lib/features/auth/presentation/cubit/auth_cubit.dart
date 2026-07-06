@@ -7,6 +7,7 @@ import '../../../../core/services/cache_keys.dart';
 
 import '../../data/model/user_model.dart';
 import '../../data/repos/auth_repository.dart';
+import '../../data/request/forget_password_request.dart';
 import '../../data/request/login_request.dart';
 import '../../data/request/register_request.dart';
 import '../../data/request/resend_otp_request.dart';
@@ -97,10 +98,13 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> close() {
     emailController.dispose();
     passwordController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
+    otpController.dispose();
+    newPasswordController.dispose();
 
     return super.close();
   }
-
   Future<void> verifyEmail({
     required String email,
   }) async {
@@ -183,7 +187,31 @@ class AuthCubit extends Cubit<AuthState> {
 
     }
   }
+  Future<void> forgotPassword({
+    required String email,
+  }) async {
+    emit(const AuthLoading());
 
+    try {
+      final response = await repository.forgotPassword(
+        ForgotPasswordRequest(
+          email: email,
+        ),
+      );
+
+      emit(
+        ForgotPasswordSuccess(
+          response.message,
+        ),
+      );
+    } on AppException catch (e) {
+      emit(
+        AuthError(
+          e.message,
+        ),
+      );
+    }
+  }
   Future<void> resetPassword({
     required String email,
   }) async {

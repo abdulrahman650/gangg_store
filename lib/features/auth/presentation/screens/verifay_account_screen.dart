@@ -9,6 +9,7 @@ import '../../../../core/theme/theme_cubit.dart';
 import '../../../../core/utils/default_elevated_button.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
+import 'login_screen.dart';
 
 class VerifyAccountView extends StatefulWidget {
   final bool isFromForgotPassword;
@@ -29,9 +30,9 @@ class _VerifyAccountViewState extends State<VerifyAccountView> {
 
 
   final List<TextEditingController> _controllers =
-  List.generate(4, (_) => TextEditingController());
+  List.generate(6, (_) => TextEditingController());
   final List<FocusNode> _focusNodes =
-  List.generate(4, (_) => FocusNode());
+  List.generate(6, (_) => FocusNode());
 
   @override
   void dispose() {
@@ -54,7 +55,13 @@ class _VerifyAccountViewState extends State<VerifyAccountView> {
             ),
           );
 
-          Navigator.popUntil(context, (route) => route.isFirst);
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const LoginView(),
+            ),
+                (route) => false,
+          );
         }
 
         if (state is ValidateOtpSuccess) {
@@ -128,7 +135,7 @@ class _VerifyAccountViewState extends State<VerifyAccountView> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Enter the 4-digit code sent to your email.',
+                'Enter the 6-digit code sent to your email.',
                 style: textTheme.titleSmall?.copyWith(
                   color: AppColors.darkGray,
                 ),
@@ -138,10 +145,10 @@ class _VerifyAccountViewState extends State<VerifyAccountView> {
               // OTP Fields
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(4, (index) {
+                children: List.generate(6, (index) {
                   return Container(
-                    width: 60,
-                    height: 60,
+                    width: 45,
+                    height: 55,
                     margin: const EdgeInsets.symmetric(horizontal: 8),
                     child: TextFormField(
                       controller: _controllers[index],
@@ -172,7 +179,7 @@ class _VerifyAccountViewState extends State<VerifyAccountView> {
                         FilteringTextInputFormatter.digitsOnly,
                       ],
                       onChanged: (value) {
-                        if (value.isNotEmpty && index < 3) {
+                        if (value.isNotEmpty && index < 5) {
                           _focusNodes[index + 1].requestFocus();
                         }
                         if (value.isEmpty && index > 0) {
@@ -211,10 +218,10 @@ class _VerifyAccountViewState extends State<VerifyAccountView> {
 
                   final otp = _controllers.map((e) => e.text).join();
 
-                  if (otp.length != 4) {
+                  if (otp.length != 6) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text("Please enter the 4-digit code"),
+                        content: Text("Please enter the 6-digit code"),
                       ),
                     );
                     return;
@@ -237,34 +244,6 @@ class _VerifyAccountViewState extends State<VerifyAccountView> {
                   }
                 },
               ),
-              // DefaultElevatedButton(
-              //   prefixSvgPath: 'assets/icons/verifyIcon.svg',
-              //   label: 'Verify',
-              //     backgroundColor: AppColors.primary,
-              //   onPressed: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (_) => const ResetPasswordView(),
-              //       ),
-              //     );
-              //   }
-              //   // {
-              //   //   final code = _controllers.map((c) => c.text).join();
-              //   //   if (code.length == 4) {
-              //   //     if (widget.isFromForgotPassword) {
-              //   //       Navigator.push(
-              //   //         context,
-              //   //         MaterialPageRoute(
-              //   //           builder: (_) => const ResetPasswordView(),
-              //   //         ),
-              //   //       );
-              //   //     } else {
-              //   //       // TODO: Verify account creation
-              //   //     }
-              //   //   }
-              //   // },
-              // ),
               const SizedBox(height: 24),
               // Back to Login
               GestureDetector(

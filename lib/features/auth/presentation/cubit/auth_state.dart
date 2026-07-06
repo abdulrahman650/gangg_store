@@ -57,3 +57,8 @@ class GetUserSuccess extends AuthState {
 
   const GetUserSuccess(this.user);
 }
+class ForgotPasswordSuccess extends AuthState {
+  final String message;
+
+  const ForgotPasswordSuccess(this.message);
+}

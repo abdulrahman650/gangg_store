@@ -1,4 +1,5 @@
 import '../datasource/auth_remote_data_source.dart';
+import '../model/forget_password_model.dart';
 import '../model/login_model.dart';
 import '../model/register_model.dart';
 import '../model/resend_otp_model.dart';
@@ -6,6 +7,7 @@ import '../model/reset_password_model.dart';
 import '../model/user_model.dart';
 import '../model/validate_otp_model.dart';
 import '../model/verify_email_model.dart';
+import '../request/forget_password_request.dart';
 import '../request/login_request.dart';
 import '../request/register_request.dart';
 import '../request/resend_otp_request.dart';
@@ -16,6 +18,9 @@ import '../request/verify_email_request.dart';
 abstract class AuthRepository {
   Future<LoginModel> login(LoginRequest request);
   Future<RegisterModel> register(RegisterRequest request);
+  Future<ForgotPasswordModel> forgotPassword(
+      ForgotPasswordRequest request,
+      );
 
   Future<VerifyEmailModel> verifyEmail(
       VerifyEmailRequest request,
@@ -84,5 +89,12 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<UserModel> getMe() {
     return remoteDataSource.getMe();
+  }
+
+  @override
+  Future<ForgotPasswordModel> forgotPassword(
+      ForgotPasswordRequest request,
+      ) {
+    return remoteDataSource.forgotPassword(request);
   }
 }

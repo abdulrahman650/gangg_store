@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gangg_store/core/theme/app_colors.dart';
 
 import '../theme/theme_cubit.dart';
 class SectionSwitchTheme extends StatelessWidget {
@@ -7,6 +8,7 @@ class SectionSwitchTheme extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 58,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: context.isDark
@@ -30,9 +32,11 @@ class SectionSwitchTheme extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: context.isDark
-                    ? Colors.white
-                    : Colors.black87,
+                color: AppColors.darkGray,
+
+                // context.isDark
+                //     ? Colors.white
+                //     : Colors.black87,
               ),
             ),
           ),

@@ -5,9 +5,9 @@ class ValidateOtpModel {
     required this.message,
   });
 
-  factory ValidateOtpModel.fromJson(Map<String, dynamic> json) {
+  factory ValidateOtpModel.fromJson(dynamic json) {
     return ValidateOtpModel(
-      message: json["message"],
+      message: json.toString(),
     );
   }
 }

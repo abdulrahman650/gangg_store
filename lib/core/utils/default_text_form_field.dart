@@ -13,6 +13,7 @@ class DefaultTextFormField extends StatefulWidget {
   String? Function(String?)? validator;
   bool isPassword;
   final Color? fillColor;
+  final Color?  borderColor;
 
   DefaultTextFormField({
     super.key,
@@ -23,6 +24,7 @@ class DefaultTextFormField extends StatefulWidget {
     this.validator,
     this.isPassword = false,
     this.fillColor,
+    this.borderColor,
   });
 
   @override
@@ -42,6 +44,12 @@ class _DefaultTextFormFieldState extends State<DefaultTextFormField> {
         Theme.of(context).brightness == Brightness.dark ? AppColors.darkGray : AppColors.darkGray,
       ),
       decoration: InputDecoration(
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: widget.borderColor ?? AppColors.simony,
+          ),
+        ),
         hintText: widget.hintText,
         hintStyle: Theme.of(context).textTheme.titleMedium
             ?.copyWith(
@@ -49,7 +57,10 @@ class _DefaultTextFormFieldState extends State<DefaultTextFormField> {
           Theme.of(context).brightness == Brightness.dark ? AppColors.darkGray : AppColors.darkGray,
         ),
         filled: true,
-        fillColor: widget.fillColor ?? AppColors.simony, //
+        fillColor: widget.fillColor ??
+            (Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkGray
+                : AppColors.simony),
         iconColor: AppColors.darkGray,
         prefixIcon:
             widget.prefixIconImageName == null

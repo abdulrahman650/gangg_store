@@ -5,9 +5,13 @@ class ResetPasswordModel {
     required this.message,
   });
 
-  factory ResetPasswordModel.fromJson(Map<String, dynamic> json) {
+  factory ResetPasswordModel.fromResponse(dynamic response) {
+    if (response is String) {
+      return ResetPasswordModel(message: response);
+    }
+
     return ResetPasswordModel(
-      message: json["message"],
+      message: response["message"],
     );
   }
 }

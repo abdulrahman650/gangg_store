@@ -24,15 +24,15 @@ class BottomRegisterScreen extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: () {},
-              // {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (_) => const RegisterView(),
-              //     ),
-              //   );
-              // },
+              onTap: ()
+              {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const RegisterView(),
+                  ),
+                );
+              },
               child: Text(
                 'Register',
                 style: textTheme.titleSmall?.copyWith(

@@ -1,5 +1,6 @@
 import '../../../../core/network/api_consumer.dart';
 import '../../../../core/network/api_endpoints.dart';
+import '../model/forget_password_model.dart';
 import '../model/login_model.dart';
 import '../model/register_model.dart';
 import '../model/resend_otp_model.dart';
@@ -7,12 +8,14 @@ import '../model/reset_password_model.dart';
 import '../model/user_model.dart';
 import '../model/validate_otp_model.dart';
 import '../model/verify_email_model.dart';
+import '../request/forget_password_request.dart';
 import '../request/login_request.dart';
 import '../request/register_request.dart';
 import '../request/resend_otp_request.dart';
 import '../request/reset_password_request.dart';
 import '../request/validate_otp_request.dart';
 import '../request/verify_email_request.dart';
+
 
 abstract class AuthRemoteDataSource {
   Future<LoginModel> login(LoginRequest request);
@@ -34,6 +37,10 @@ abstract class AuthRemoteDataSource {
       );
 
   Future<UserModel> getMe();
+
+  Future<ForgotPasswordModel> forgotPassword(
+      ForgotPasswordRequest request,
+      );
 
 }
 
@@ -92,12 +99,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<ValidateOtpModel> validateOtp(
       ValidateOtpRequest request,
       ) async {
-
     final response = await api.post(
       EndPoints.validateOtp,
       data: request.toJson(),
     );
-
+    print(response);
+    print(response.runtimeType);
     return ValidateOtpModel.fromJson(response);
   }
 
@@ -110,7 +117,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       data: request.toJson(),
     );
 
-    return ResetPasswordModel.fromJson(response);
+    print(response);
+    print(response.runtimeType);
+
+    return ResetPasswordModel.fromResponse(response);
   }
 
   @override
@@ -120,5 +130,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     );
 
     return UserModel.fromJson(response);
+  }
+  @override
+  Future<ForgotPasswordModel> forgotPassword(
+      ForgotPasswordRequest request,
+      ) async {
+    final response = await api.post(
+      EndPoints.forgotPassword,
+      data: request.toJson(),
+    );
+
+    return ForgotPasswordModel.fromJson(response);
   }
 }

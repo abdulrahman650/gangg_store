@@ -8,7 +8,7 @@ import '../../../cart/presentation/screens/cart_screen.dart';
 import '../../../category/presentation/screens/category_tab.dart';
 import '../../../favourites/presentation/screens/wishlist_tab.dart';
 import '../../../home/presentation/screens/home_tab.dart';
-import '../../../profile/presentation/screens/profile_tab.dart';
+import '../../../profile/presentation/screens/profile_screen.dart';
 
 
 class Layout extends StatefulWidget {
@@ -27,7 +27,7 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    screen = [HomeTab(), CategoryTab(), WishListTab(), ProfileTab()];
+    screen = [HomeTab(), CategoryTab(), WishListTab(), ProfileScreen()];
     controller = PageController(initialPage: 0);
   }
 

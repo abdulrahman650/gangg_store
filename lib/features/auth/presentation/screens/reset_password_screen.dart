@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:gangg_store/features/auth/presentation/screens/verifay_account_screen.dart';
 import 'package:gangg_store/features/auth/presentation/widgets/CustomAppBar.dart';
-import '../../../../core/theme/theme_cubit.dart';
+import '../../../../core/utils/app_snack_bar.dart';
 import '../../../../core/utils/validator.dart';
-
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/default_elevated_button.dart';
 import '../../../../core/utils/default_text_form_field.dart';
 import '../cubit/auth_cubit.dart';
+import '../cubit/auth_state.dart';
 import 'login_screen.dart';
 
 class ResetPasswordView extends StatelessWidget {
@@ -20,11 +18,41 @@ class ResetPasswordView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final newPasswordController = TextEditingController();
+    final cubit = context.read<AuthCubit>();
     final confirmPasswordController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
-    return Scaffold(
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+
+        if(state is ResetPasswordSuccess){
+
+          AppSnackBar.success(
+            context,
+            state.message,
+          );
+
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const LoginView(),
+            ),
+                (_) => false,
+          );
+
+        }
+
+        if(state is AuthError){
+
+          AppSnackBar.error(
+            context,
+            state.message,
+          );
+
+        }
+
+      },
+  child: Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -81,7 +109,7 @@ class ResetPasswordView extends StatelessWidget {
                       // New Password
                       DefaultTextFormField(
                         hintText: 'New Password',
-                        controller: newPasswordController,
+                        controller: cubit.newPasswordController,
                         prefixIconImageName: 'lock',
                         validator: Validators.validatePassword,
                         isPassword: true,
@@ -93,7 +121,7 @@ class ResetPasswordView extends StatelessWidget {
                         controller: confirmPasswordController,
                         prefixIconImageName: 'lock',
                         validator: (value) {
-                          if (value != newPasswordController.text) {
+                          if (value != cubit.newPasswordController.text){
                             return 'Passwords do not match';
                           }
                           return Validators.validatePassword(value);
@@ -107,17 +135,11 @@ class ResetPasswordView extends StatelessWidget {
                         prefixSvgPath: "assets/icons/arrowRight.svg",
                         backgroundColor: AppColors.primary,
                         onPressed: () {
-                          context.read<AuthCubit>().resetPassword(
+                          if (!formKey.currentState!.validate()) return;
+
+                          cubit.resetPassword(
                             email: email,
                           );
-                          if (formKey.currentState!.validate()) {
-                            // TODO: Call API to reset password
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (_) => const LoginView()),
-                                  (route) => false,
-                            );
-                          }
                         },
                       ),
                       const SizedBox(height: 24),
@@ -148,6 +170,7 @@ class ResetPasswordView extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ),
+);
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
-import 'package:gangg_store/features/splash/splash_screen.dart';
+import 'package:gangg_store/features/Branches/splash/splash_screen.dart';
 import 'core/utils/default_elevated_button.dart';
 
 

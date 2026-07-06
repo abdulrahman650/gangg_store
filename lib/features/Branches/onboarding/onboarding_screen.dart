@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
-import 'package:gangg_store/features/onboarding/Screens/firstscreen.dart';
-import 'package:gangg_store/features/onboarding/Screens/secondscreen.dart';
-import 'package:gangg_store/features/onboarding/Screens/thirdscreen.dart';
-import 'package:gangg_store/features/signin_and_guest/sign_in_and_guest_screen.dart';
+import 'package:gangg_store/features/Branches/onboarding/Screens/firstscreen.dart';
+import 'package:gangg_store/features/Branches/onboarding/Screens/secondscreen.dart';
+import 'package:gangg_store/features/Branches/onboarding/Screens/thirdscreen.dart';
+import 'package:gangg_store/features/Branches/signin_and_guest/sign_in_and_guest_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});

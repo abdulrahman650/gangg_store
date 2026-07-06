@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
-import 'package:gangg_store/features/forgot_password/forgot_password.dart';
-import 'package:gangg_store/features/register_screen/register_screen.dart';
+import 'package:gangg_store/features/Branches/forgot_password/forgot_password.dart';
+import 'package:gangg_store/features/Branches/register_screen/register_screen.dart';
 import 'package:gap/gap.dart';
 
 class SignIn extends StatelessWidget {

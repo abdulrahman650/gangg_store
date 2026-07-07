@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
 
 class CategoryItem extends StatelessWidget {
-  const CategoryItem({super.key, required this.icon, required this.label});
+   CategoryItem({super.key, required this.IconImageName, required this.label});
 
-  final IconData icon;
+  String? IconImageName;
   final String label;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: Column(
@@ -16,12 +17,20 @@ class CategoryItem extends StatelessWidget {
           InkWell(
             onTap: () {},
             child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.gray,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: AppColors.black, size: 26),
+             height: 55,
+              child: CircleAvatar(
+
+                  backgroundColor: AppColors.gray,
+                  radius: 36,
+                  child:
+              IconImageName == null
+                  ? null
+                  : SvgPicture.asset(
+                'assets/icons/${IconImageName}.svg',
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).brightness == Brightness.dark ? AppColors.darkGray : AppColors.darkGray,
+                  BlendMode.srcIn,
+                ),)               ),
             ),
           ),
           const SizedBox(height: 6),
@@ -29,7 +38,7 @@ class CategoryItem extends StatelessWidget {
             label,
             style: const TextStyle(
               fontSize: 14,
-              color: AppColors.black,
+              color: AppColors.darkGray,
               fontWeight: FontWeight.w500,
             ),
           ),

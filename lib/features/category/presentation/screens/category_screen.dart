@@ -11,55 +11,10 @@ class CategoryScreen extends StatelessWidget {
     TextTheme text = Theme.of(context).textTheme;
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-              child: Row(
-                children: [
-                  SvgPicture.asset(
-                    'assets/icons/arrowBack.svg',
-                    width: 18,
-                    height: 18,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.primary,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Gang Store',
-                    style: text.titleMedium?.copyWith(
-                      color: AppColors.primary,
-                      fontSize: 17,
-                    ),
-                  ),
-                  const Spacer(),
-                  SvgPicture.asset(
-                    'assets/icons/search.svg',
-                    width: 18,
-                    height: 18,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.primary,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                  const SizedBox(width: 14),
-                  SvgPicture.asset(
-                    'assets/icons/bag.svg',
-                    width: 18,
-                    height: 18,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.primary,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
             SizedBox(
               height: 42,
               child: ListView(
@@ -87,7 +42,6 @@ class CategoryScreen extends StatelessWidget {
                 ],
               ),
             ),
-
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -114,9 +68,7 @@ class CategoryScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 12),
-
                     const CategoryItem(
                       title: 'Fine Jewelry',
                       subtitle: 'Curated Collection',
@@ -126,7 +78,6 @@ class CategoryScreen extends StatelessWidget {
                     ),
 
                     const SizedBox(height: 12),
-
                     Row(
                       children: const [
                         Expanded(
@@ -183,7 +134,7 @@ class CategoryScreen extends StatelessWidget {
               ),
             ),
 
-            const _BottomNavBar(),
+
           ],
         ),
       ),
@@ -219,105 +170,20 @@ class _CategoryChip extends StatelessWidget {
             Icon(
               icon,
               size: 13,
-              color: isSelected ? AppColors.white : AppColors.primary,
+              color: isSelected ? AppColors.white : AppColors.darkGray,
             ),
             const SizedBox(width: 5),
           ],
           Text(
             title,
             style: text.titleSmall?.copyWith(
-              color: isSelected ? AppColors.white : AppColors.primary,
+              color: isSelected ? AppColors.white : AppColors.darkGray,
               fontSize: 11,
               fontWeight: FontWeight.w500,
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _BottomNavBar extends StatelessWidget {
-  const _BottomNavBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 68,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _BottomNavItem(
-            label: 'Home',
-            asset: 'assets/icons/Home.svg',
-          ),
-          _BottomNavItem(
-            label: 'Category',
-            asset: 'assets/icons/category.svg',
-            isActive: true,
-          ),
-          _BottomNavItem(
-            label: 'Wishlist',
-            asset: 'assets/icons/love.svg',
-          ),
-          _BottomNavItem(
-            label: 'Profile',
-            asset: 'assets/icons/profile.svg',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BottomNavItem extends StatelessWidget {
-  final String label;
-  final String asset;
-  final bool isActive;
-
-  const _BottomNavItem({
-    required this.label,
-    required this.asset,
-    this.isActive = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final Color color = isActive ? AppColors.primary : AppColors.black;
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SvgPicture.asset(
-          asset,
-          width: 20,
-          height: 20,
-          colorFilter: ColorFilter.mode(
-            color,
-            BlendMode.srcIn,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 10,
-            fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-            color: color,
-          ),
-        ),
-      ],
     );
   }
 }

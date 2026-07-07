@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:gangg_store/core/theme/app_colors.dart';
-import 'package:gangg_store/features/branches/splash/splash_screen.dart';
-import 'core/utils/default_elevated_button.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:gangg_store/features/home/presentation/screens/home_screen.dart';
+import 'core/services/cache_helper.dart';
+import 'core/services/service_locators.dart';
+import 'core/theme/app_theme.dart';
+import 'core/theme/theme_cubit.dart';
+import 'features/auth/presentation/cubit/auth_cubit.dart';
+import 'features/auth/presentation/screens/login_screen.dart';
+import 'features/profile/presentation/cubit/profile_cubit.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await CacheHelper.init();
+  await setupServiceLocator();
+
+
   runApp(const MyApp());
 }
 
@@ -14,10 +24,37 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const SplashScreen (),
-      debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.light,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthCubit>(
+          create: (_) => getIt<AuthCubit>(),
+        ),
+        BlocProvider<ThemeCubit>(
+          create: (_) => ThemeCubit(),
+        ),
+        BlocProvider(
+          create: (_) => getIt<ProfileCubit>(),
+
+        )
+
+      ],
+      child: BlocBuilder<ThemeCubit, ThemeMode>(
+        builder: (context, themeMode) {
+          final authCubit = context.read<AuthCubit>();
+
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.customLightTheme,
+            darkTheme: AppTheme.customDarkTheme,
+            themeMode: themeMode,
+            // home: authCubit.isLoggedIn
+            //     ? const Layout()
+            //     : const LoginView(),
+            home: const LoginView(),
+          );
+        },
+      ),
     );
   }
 }
+

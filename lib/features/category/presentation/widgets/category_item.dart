@@ -3,8 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class CategoryItem extends StatelessWidget {
-  final String title;
-  final String subtitle;
+  final String? title;
+  final String? subtitle;
   final String? svgAsset;
   final String? imageAsset;
   final double height;
@@ -13,8 +13,8 @@ class CategoryItem extends StatelessWidget {
 
   const CategoryItem({
     super.key,
-    required this.title,
-    required this.subtitle,
+     this.title,
+     this.subtitle,
     this.svgAsset,
     this.imageAsset,
     required this.height,
@@ -94,7 +94,7 @@ class CategoryItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    title!,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: text.titleMedium?.copyWith(
@@ -104,7 +104,7 @@ class CategoryItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    subtitle,
+                    subtitle!,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: text.titleSmall?.copyWith(

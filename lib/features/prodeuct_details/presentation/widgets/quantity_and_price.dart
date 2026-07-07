@@ -12,7 +12,7 @@ class QuantityAndPrice extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.simony,
+        color: AppColors.lightGray,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -22,9 +22,9 @@ class QuantityAndPrice extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'QUANTITY',
+                '  QUANTITY',
                 style: TextStyle(
-                  color: AppColors.black,
+                  color: AppColors.darkGray,
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
                 ),
@@ -39,7 +39,7 @@ class QuantityAndPrice extends StatelessWidget {
               Text(
                 'TOTAL PRICE',
                 style: TextStyle(
-                  color: AppColors.black,
+                  color: AppColors.darkGray,
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
                 ),

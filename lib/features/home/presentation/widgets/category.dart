@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
+import 'package:gangg_store/features/category/presentation/screens/category_screen.dart';
 import 'package:gangg_store/features/home/presentation/widgets/category_item.dart';
 
 class Category extends StatelessWidget {
@@ -21,7 +22,14 @@ class Category extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (_) => const CategoryScreen(),
+                  //   ),
+                  // );
+              },
               child: const Text(
                 'View All',
                 style: TextStyle(

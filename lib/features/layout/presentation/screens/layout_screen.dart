@@ -1,15 +1,13 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gangg_store/features/search/presentation/search_screen.dart';
+import 'package:gangg_store/features/search/presentation/screens/search_screen.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_cubit.dart';
 import '../../../cart/presentation/screens/cart_screen.dart';
 import '../../../category/presentation/screens/category_screen.dart';
-import '../../../category/presentation/screens/category_tab.dart';
 import '../../../favourites/presentation/screens/wishlist_tab.dart';
 import '../../../home/presentation/screens/home_screen.dart';
-import '../../../home/presentation/screens/home_tab.dart';
 import '../../../profile/presentation/screens/profile_screen.dart';
 
 
@@ -29,7 +27,7 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    screen = [HomeScreen(), CategoryScreen(), WishListTab(), ProfileScreen()];
+    screen = [HomeScreen(), CategoryScreen(), WishlistScreen(), ProfileScreen()];
     controller = PageController(initialPage: 0);
   }
 
@@ -107,6 +105,19 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
               backgroundColor:  context.isDark
                 ?  Theme.of(context).scaffoldBackgroundColor : AppColors.backgroundWhite ,
               elevation: 0,
+              leading: currentScreen == 0
+                  ? null
+                  : IconButton(
+                icon: const Icon(Icons.arrow_back),
+                color: AppColors.primary,
+                  onPressed: () {
+                    controller.animateToPage(
+                      0,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+              ),
               title: Text(
                 'Gang Store',
                 style: textTheme.headlineSmall?.copyWith(

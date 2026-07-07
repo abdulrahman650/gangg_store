@@ -1,0 +1,62 @@
+*   [33m49e4015[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdevelop[m[33m, [m[1;31morigin/develop[m[33m)[m Merge pull request #14 from abdulrahman650/feature/otp
+[31m|[m[32m\[m  
+[31m|[m * [33m8edbca5[m[33m ([m[1;31morigin/feature/otp[m[33m)[m all screens done
+[31m|[m[31m/[m  
+*   [33m6235e4b[m Merge pull request #13 from abdulrahman650/feature/splash-screen
+[33m|[m[34m\[m  
+[33m|[m *   [33ma0a676b[m[33m ([m[1;31morigin/feature/splash-screen[m[33m)[m doing all screens excepct otp and reset password
+[33m|[m [35m|[m[33m\[m  
+[33m|[m [35m|[m[33m/[m  
+[33m|[m[33m/[m[35m|[m   
+[33m|[m * [33m449f66e[m doing all screens expect otp and password reset
+[33m|[m * [33m1bc096b[m completed all the screens, except otp and the password reset
+[33m|[m * [33mc0b7454[m completed all screens except otp and the password reset.
+[33m|[m * [33m6ae7b6d[m splash screen done and connecting it to onboardingscreen1
+[33m|[m [36m|[m * [33m0283329[m[33m ([m[1;32mfeature/auth-abdelrahman[m[33m)[m handle ui in that screen
+[33m|[m [36m|[m *   [33m692802e[m Merge branch 'develop' of https://github.com/abdulrahman650/gangg_store into feature/auth-abdelrahman
+[33m|[m [36m|[m [1;32m|[m[33m\[m  
+[33m|[m [36m|[m[33m_[m[1;32m|[m[33m/[m  
+[33m|[m[33m/[m[36m|[m [1;32m|[m   
+* [36m|[m [1;32m|[m   [33m0cf620a[m Merge pull request #11 from abdulrahman650/feature/cart
+[1;34m|[m[1;35m\[m [36m\[m [1;32m\[m  
+[1;34m|[m * [36m|[m [1;32m|[m [33mde079c5[m[33m ([m[1;31morigin/feature/cart[m[33m)[m Refactor cart screen and add subtotal and coupon sections
+[1;34m|[m * [36m|[m [1;32m|[m [33m193aec0[m Create cart item UI
+* [1;35m|[m [36m|[m [1;32m|[m   [33meb80f43[m Merge pull request #12 from abdulrahman650/feature/home
+[1;36m|[m[31m\[m [1;35m\[m [36m\[m [1;32m\[m  
+[1;36m|[m * [1;35m|[m [36m|[m [1;32m|[m [33md5ef533[m[33m ([m[1;31morigin/feature/home[m[33m)[m product details screen ui only
+[1;36m|[m * [1;35m|[m [36m|[m [1;32m|[m [33m7407821[m home screen ui only
+[1;36m|[m [31m|[m [1;35m|[m [36m|[m *   [33m16d93df[m :wqMerge branch 'develop' into feature/auth-abdelrahman
+[1;36m|[m [31m|[m [1;35m|[m [36m|[m [32m|[m[1;36m\[m  
+[1;36m|[m [31m|[m[1;36m_[m[1;35m|[m[1;36m_[m[36m|[m[1;36m_[m[32m|[m[1;36m/[m  
+[1;36m|[m[1;36m/[m[31m|[m [1;35m|[m [36m|[m [32m|[m   
+* [31m|[m [1;35m|[m [36m|[m [32m|[m   [33mb09867c[m Merge pull request #8 from abdulrahman650/feature/category-screen
+[34m|[m[35m\[m [31m\[m [1;35m\[m [36m\[m [32m\[m  
+[34m|[m * [31m|[m [1;35m|[m [36m|[m [32m|[m [33m9ca98c5[m[33m ([m[1;31morigin/feature/category-screen[m[33m)[m add category screen ui with assets
+[34m|[m[34m/[m [31m/[m [1;35m/[m [36m/[m [32m/[m  
+[34m|[m [31m|[m [1;35m|[m [36m|[m * [33m9ddba78[m WIP: auth changes
+[34m|[m [31m|[m [1;35m|[m [36m|[m * [33m632c963[m[33m ([m[1;31morigin/feature/auth-abdelrahman[m[33m)[m Complete auth feature
+[34m|[m [31m|[m[34m_[m[1;35m|[m[34m_[m[36m|[m[34m/[m  
+[34m|[m[34m/[m[31m|[m [1;35m|[m [36m|[m   
+* [31m|[m [1;35m|[m [36m|[m   [33m568a39b[m Merge pull request #6 from abdulrahman650/feature/full-screen
+[1;35m|[m[1;31m\[m [31m\[m [1;35m\[m [36m\[m  
+[1;35m|[m [1;31m|[m[1;35m_[m[31m|[m[1;35m/[m [36m/[m  
+[1;35m|[m[1;35m/[m[1;31m|[m [31m|[m [36m|[m   
+[1;35m|[m * [31m|[m [36m|[m [33ma9e0cd6[m[33m ([m[1;31morigin/feature/full-screen[m[33m)[m remove unused gitkeep files
+[1;35m|[m * [31m|[m [36m|[m [33md412796[m add profile screen UI
+[1;35m|[m * [31m|[m [36m|[m   [33m03302e8[m add project structure
+[1;35m|[m [1;32m|[m[1;35m\[m [31m\[m [36m\[m  
+[1;35m|[m [1;32m|[m[1;35m/[m [31m/[m [36m/[m  
+[1;35m|[m[1;35m/[m[1;32m|[m [31m|[m [36m|[m   
+* [1;32m|[m [31m|[m [36m|[m   [33me99f3ef[m Merge pull request #4 from abdulrahman650/feature/full-screen
+[1;34m|[m[1;35m\[m [1;32m\[m [31m\[m [36m\[m  
+* [1;35m\[m [1;32m\[m [31m\[m [36m\[m   [33me6a138f[m Merge pull request #3 from abdulrahman650/feature/home
+[36m|[m[31m\[m [1;35m\[m [1;32m\[m [31m\[m [36m\[m  
+[36m|[m [31m|[m [1;35m|[m[31m_[m[1;32m|[m[31m/[m [36m/[m  
+[36m|[m [31m|[m[31m/[m[1;35m|[m [1;32m|[m [36m/[m   
+[36m|[m [31m|[m[36m_[m[1;35m|[m[36m_[m[1;32m|[m[36m/[m    
+[36m|[m[36m/[m[31m|[m [1;35m|[m [1;32m|[m     
+[36m|[m * [1;35m|[m [1;32m|[m [33me2f2325[m organization folders only
+[36m|[m[36m/[m [1;35m/[m [1;32m/[m  
+[36m|[m [1;35m|[m * [33ma016b8b[m add project structure
+[36m|[m [1;35m|[m[1;35m/[m  
+[36m|[m * [33m597c68e[m add radius elvated button

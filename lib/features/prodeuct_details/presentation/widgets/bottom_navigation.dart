@@ -21,7 +21,7 @@ class BottomNavigation extends StatelessWidget {
                 ),
                 child: const Icon(
                   Icons.favorite_border,
-                  color: AppColors.black,
+                  color: AppColors.white,
                 ),
               ),
             ),

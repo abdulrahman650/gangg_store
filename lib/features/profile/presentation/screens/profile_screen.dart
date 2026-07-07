@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
 import 'package:gangg_store/core/widgets/section_switch_theme.dart';
 import 'package:gangg_store/features/profile/presentation/widgets/logout_batton.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../core/utils/default_elevated_button.dart';
 import '../../../../core/utils/default_text_form_field.dart';
 import '../../../../core/utils/validator.dart';
@@ -24,7 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final phoneNumberController = TextEditingController();
   final passController = TextEditingController();
 
-
+final isLoading= false;
 
 
   @override
@@ -75,13 +76,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
       },
   builder: (context, state) {
-    if (state is ProfileLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
+    // if (state is ProfileLoading) {
+    //   return const Scaffold(
+    //     body: Center(
+    //       child: CircularProgressIndicator(),
+    //     ),
+    //   );
+    // }
     if (state is ProfileError) {
       return Scaffold(
         body: Center(
@@ -93,139 +94,142 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final user = state is ProfileSuccess ? state.user : null;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 18),
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Container(
-                          width: 84,
-                          height: 84,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: const Color(0xffF2B9A8),
-                              width: 1.5,
-                            ),
-                          ),
-                          child: ClipOval(
-                            child: user?.profilePicture != null &&
-                                user!.profilePicture!.isNotEmpty
-                                ? Image.network(
-                              user.profilePicture!,
-                              fit: BoxFit.cover,
-                            )
-                                : Image.asset(
-                              'assets/images/profile_man.png',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          right: -2,
-                          bottom: 2,
-                          child: Container(
-                            width: 30,
-                            height: 30,
-                            decoration: const BoxDecoration(
-                              color: AppColors.primary,
+      body: Skeletonizer(
+        enabled: isLoading,
+        child: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 18),
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Container(
+                            width: 84,
+                            height: 84,
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
+                              border: Border.all(
+                                color: const Color(0xffF2B9A8),
+                                width: 1.5,
+                              ),
                             ),
-                            child: Center(
-                              child: SvgPicture.asset(
-                                'assets/icons/camera.svg',
-                                width: 15,
-                                color: Colors.white,
+                            child: ClipOval(
+                              child: user?.profilePicture != null &&
+                                  user!.profilePicture!.isNotEmpty
+                                  ? Image.network(
+                                user.profilePicture!,
+                                fit: BoxFit.cover,
+                              )
+                                  : Image.asset(
+                                'assets/images/profile_man.png',
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 18),
-                    Text(
-                      user?.fullName ?? '',
-                      style: textTheme.headlineSmall?.copyWith(
-                        // color: AppColors.black,
-                        fontWeight: FontWeight.bold,
+                          Positioned(
+                            right: -2,
+                            bottom: 2,
+                            child: Container(
+                              width: 30,
+                              height: 30,
+                              decoration: const BoxDecoration(
+                                color: AppColors.primary,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  'assets/icons/camera.svg',
+                                  width: 15,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: 34),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Appearance',
-                       style:  textTheme.titleSmall?.copyWith(
-                          color: AppColors.primary,
+                      const SizedBox(height: 18),
+                      Text(
+                        user?.fullName ?? '',
+                        style: textTheme.headlineSmall?.copyWith(
+                          // color: AppColors.black,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    ///switch theme
-                    SectionSwitchTheme(),
-                    const SizedBox(height: 26),
-                    ///name
-                    DefaultTextFormField(
-                      borderColor: AppColors.primary,
-                      hintText: 'Full Name',
-                      controller: fullNameController,
-                      prefixIconImageName: 'person',
-                      validator: Validators.validateName,
-                    ), const SizedBox(height: 18),
-                    ///email
-                    DefaultTextFormField(
-                      hintText: 'Email Address',
-                      borderColor: AppColors.primary,
-                      controller: emailAddressController,
-                      prefixIconImageName: 'email',
-                      validator: Validators.validateName,
-                    ),const SizedBox(height: 18),
-                    ///phone
-                    DefaultTextFormField(
-                      hintText: 'Phone Number',
-                      borderColor: AppColors.primary,
-                      controller: phoneNumberController,
-                      prefixIconImageName: 'phone',
-                      validator: Validators.validateName,
-                    ),const SizedBox(height: 18),
-                    ///password
-                    DefaultTextFormField(
-                      hintText: 'Password',
-                      controller: passController,
-                      borderColor: AppColors.primary,
-                      prefixIconImageName: 'lock',
-                      validator: Validators.validateName,
-                    ),const SizedBox(height: 18),
-                    ///save change
-                    DefaultElevatedButton(
-                      label: 'Save Changes',
-                      backgroundColor: AppColors.primary,
-                      onPressed: () {
-                      },
-                    ),
+                      const SizedBox(height: 34),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Appearance',
+                         style:  textTheme.titleSmall?.copyWith(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      ///switch theme
+                      SectionSwitchTheme(),
+                      const SizedBox(height: 26),
+                      ///name
+                      DefaultTextFormField(
+                        borderColor: AppColors.primary,
+                        hintText: 'Full Name',
+                        controller: fullNameController,
+                        prefixIconImageName: 'person',
+                        validator: Validators.validateName,
+                      ), const SizedBox(height: 18),
+                      ///email
+                      DefaultTextFormField(
+                        hintText: 'Email Address',
+                        borderColor: AppColors.primary,
+                        controller: emailAddressController,
+                        prefixIconImageName: 'email',
+                        validator: Validators.validateName,
+                      ),const SizedBox(height: 18),
+                      ///phone
+                      DefaultTextFormField(
+                        hintText: 'Phone Number',
+                        borderColor: AppColors.primary,
+                        controller: phoneNumberController,
+                        prefixIconImageName: 'phone',
+                        validator: Validators.validateName,
+                      ),const SizedBox(height: 18),
+                      ///password
+                      DefaultTextFormField(
+                        hintText: 'Password',
+                        controller: passController,
+                        borderColor: AppColors.primary,
+                        prefixIconImageName: 'lock',
+                        validator: Validators.validateName,
+                      ),const SizedBox(height: 18),
+                      ///save change
+                      DefaultElevatedButton(
+                        label: 'Save Changes',
+                        backgroundColor: AppColors.primary,
+                        onPressed: () {
+                        },
+                      ),
 
 
-                    const SizedBox(height: 16),
-                    state is LogoutLoading
-                        ? const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      child: CircularProgressIndicator(),
-                    )
-                        : const LogoutButton(),
-                    const SizedBox(height: 28),
-                  ],
+                      const SizedBox(height: 16),
+                      state is LogoutLoading
+                          ? const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: CircularProgressIndicator(),
+                      )
+                          : const LogoutButton(),
+                      const SizedBox(height: 28),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

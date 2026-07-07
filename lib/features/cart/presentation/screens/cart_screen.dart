@@ -5,6 +5,8 @@ import 'package:gangg_store/core/utils/default_elevated_button.dart';
 import 'package:gangg_store/features/cart/presentation/widget/cart_item.dart';
 import 'package:gangg_store/features/cart/presentation/widget/subtotal.dart';
 
+import '../../../../core/theme/theme_cubit.dart';
+import '../../../search/presentation/screens/search_screen.dart';
 import '../widget/coupon-section.dart';
 
 class CartScreen extends StatelessWidget {
@@ -15,29 +17,56 @@ class CartScreen extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: SvgPicture.asset(
-            'assets/icons/arrowBack.svg',
-            width: 20,
-          ),
-        ),
-        title: Text(
-          'Gang Store',
-          style: textTheme.headlineLarge?.copyWith(
+        appBar: AppBar(
+          leading:   IconButton(
+            icon: const Icon(Icons.arrow_back),
             color: AppColors.primary,
+            onPressed: () {
+              Navigator.pop(
+                context,
+              );
+            },
           ),
+          backgroundColor:  context.isDark
+              ?  Theme.of(context).scaffoldBackgroundColor : AppColors.backgroundWhite ,
+          elevation: 0,
+          title: Text(
+            'Gang Store',
+            style: textTheme.headlineSmall?.copyWith(
+              color: AppColors.primary,
+              fontWeight: FontWeight.bold,
+              fontSize: 28,
+            ),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              color: AppColors.primary,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const SearchScreen(),
+                  ),
+                );
+              },
+            ),
+          ],
+          //   currentScreen == 0
+          //       ? "Home"
+          //       : currentScreen == 1
+          //           ? "Category"
+          //           : currentScreen == 2
+          //               ? "Wishlist"
+          //               : "Profile",
+          //   style: const TextStyle(
+          //     color: AppColors.primary,
+          //     fontSize: 20,
+          //     fontWeight: FontWeight.bold,
+          //   ),
+          // ),
+          // centerTitle: true,
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: SvgPicture.asset('assets/icons/bag.svg'),
-          ),
-        ],
-      ),
 
       body: SafeArea(
         child: Padding(

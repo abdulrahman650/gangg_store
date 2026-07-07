@@ -36,9 +36,7 @@ class CategoryScreen extends StatelessWidget {
                   _CategoryChip(
                     title: 'New In',
                   ),
-                  _CategoryChip(
-                    title: 'Luxury',
-                  ),
+
                 ],
               ),
             ),

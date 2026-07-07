@@ -5,59 +5,58 @@ import 'package:gangg_store/features/prodeuct_details/presentation/widgets/botto
 
 import 'package:gangg_store/features/prodeuct_details/presentation/widgets/quantity_and_price.dart';
 
+import '../../../../core/theme/theme_cubit.dart';
+import '../../../cart/presentation/screens/cart_screen.dart';
+import '../../../search/presentation/screens/search_screen.dart';
+
 class ProductDetailScreen extends StatelessWidget {
-  const ProductDetailScreen({super.key});
+  ProductDetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Scaffold(
-      backgroundColor: AppColors.backgroundWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundWhite,
-        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.black),
-          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back),
+          color: AppColors.primary,
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        title: const Text(
+        backgroundColor: context.isDark
+            ? Theme.of(context).scaffoldBackgroundColor
+            : AppColors.backgroundWhite,
+        elevation: 0,
+        title: Text(
           'Gang Store',
-          style: TextStyle(
-            color: AppColors.black,
+          style: textTheme.headlineSmall?.copyWith(
+            color: AppColors.primary,
             fontWeight: FontWeight.bold,
-            fontSize: 18,
+            fontSize: 28,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search, color: AppColors.black),
-            onPressed: () {},
+            icon: const Icon(Icons.search),
+            color: AppColors.primary,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SearchScreen()),
+              );
+            },
           ),
           IconButton(
-            icon: Stack(
-              children: [
-                const Icon(Icons.shopping_bag_outlined, color: AppColors.black),
-                Positioned(
-                  right: 0,
-                  top: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: const BoxDecoration(
-                      color: AppColors.red,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Text(
-                      '2',
-                      style: TextStyle(
-                        color: AppColors.white,
-                        fontSize: 8,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            onPressed: () {},
+            icon: const Icon(Icons.card_travel),
+            color: AppColors.primary,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CartScreen()),
+              );
+            },
           ),
         ],
       ),
@@ -127,38 +126,37 @@ class ProductDetailScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+               Text(
                 'PRECISION COLLECTION',
-                style: TextStyle(
-                  color: AppColors.black,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.5,
+                style: textTheme.bodyMedium?.copyWith(
+          color: AppColors.darkGray,
                 ),
               ),
-              Row(
+              Column(
                 children: const [
-                  Icon(Icons.star, color: AppColors.primary, size: 16),
-                  Text(
-                    ' 4.9',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  Row(
+                    children: [  Icon(Icons.star, color: AppColors.primary, size: 16),
+                      Text(
+                        ' 4.9',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,
+                            color: AppColors.primary),
+                      ),],
                   ),
+
                   Text(
                     ' (128 reviews)',
-                    style: TextStyle(fontSize: 11, color: AppColors.black),
+                    style: TextStyle(fontSize: 11, color: AppColors.darkGray),
                   ),
                 ],
               ),
             ],
           ),
           const SizedBox(height: 6),
-          const Text(
+           Text(
             'Chrono-Master Titanium',
-            style: TextStyle(
-              fontSize: 26,
+            style: textTheme.headlineSmall?.copyWith(
+              // color: AppColors.black,
               fontWeight: FontWeight.bold,
-              color: AppColors.black,
-              height: 1.2,
             ),
           ),
           const SizedBox(height: 12),
@@ -178,7 +176,7 @@ class ProductDetailScreen extends StatelessWidget {
                 '\$3,100.00',
                 style: TextStyle(
                   fontSize: 16,
-                  color: AppColors.black.withAlpha(153),
+                  color: AppColors.darkGray.withAlpha(160),
                   decoration: TextDecoration.lineThrough,
                 ),
               ),
@@ -202,19 +200,20 @@ class ProductDetailScreen extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
-          const Text(
+           Text(
             'DESCRIPTION',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
-              color: AppColors.black,
-              letterSpacing: 0.5,
+            style: textTheme.titleLarge?.copyWith(
+              // color: AppColors.black,
+              fontWeight: FontWeight.w400,
+              fontSize: 16
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+           Text(
             'Experience the pinnacle of luxury horology. The Chrono-Master Titanium combines aerospace-grade materials with a hand-assembled Swiss movement. Designed for the modern explorer who demands both technical excellence and refined aesthetic presence.',
-            style: TextStyle(color: AppColors.black, height: 1.5, fontSize: 13),
+            style: textTheme.bodyMedium?.copyWith(
+              color: AppColors.darkGray,
+            ),
           ),
           const SizedBox(height: 20),
 
@@ -224,9 +223,13 @@ class ProductDetailScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+               Text(
                 'Similar Products',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: textTheme.titleLarge?.copyWith(
+                  // color: AppColors.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16
+                ),
               ),
               GestureDetector(
                 onTap: () {},

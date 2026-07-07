@@ -82,7 +82,8 @@ class _CartItemState extends State<CartItem> {
                               });
                             }
                           },
-                          icon: const Icon(Icons.remove),
+                          icon:
+                          SvgPicture.asset("assets/icons/delete.svg"),
                         ),
                       ),
 

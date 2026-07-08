@@ -8,6 +8,7 @@ import 'core/theme/theme_cubit.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/profile/presentation/cubit/profile_cubit.dart';
+import 'features/splash/presentation/screens/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
             // home: authCubit.isLoggedIn
             //     ? const Layout()
             //     : const LoginView(),
-            home: const LoginView(),
+            home: const SplashScreen(),
           );
         },
       ),

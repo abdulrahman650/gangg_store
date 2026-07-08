@@ -7,20 +7,22 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        // IconButton(
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: () {
+        //     Navigator.pop(context);
+        //   },
+        // ),
+        Center(
+          child: Text(
+            '       Gang Store',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: AppColors.primary,
+              fontWeight: FontWeight.bold,
+          ),),
         ),
-        Text(
-          'Gang Store',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            color: AppColors.primary,
-            fontWeight: FontWeight.bold,
-        ),),
          SizedBox(width: 48), // Placeholder for spacing
       ],
     );

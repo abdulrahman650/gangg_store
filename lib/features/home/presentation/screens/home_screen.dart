@@ -5,6 +5,8 @@ import 'package:gangg_store/features/home/presentation/widgets/create_account_ba
 import 'package:gangg_store/features/home/presentation/widgets/discount_card.dart';
 import 'package:gangg_store/features/home/presentation/widgets/product_card.dart';
 
+import '../../../../core/services/cache_helper.dart';
+import '../../../../core/services/cache_keys.dart';
 import '../../../../core/utils/default_text_form_field.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -80,7 +82,8 @@ class HomeScreen extends StatelessWidget {
                     const SizedBox(height: 20),
 
                     // Create Account Banner
-                    CreateAccountBar(),
+                    if (CacheHelper.getData(CacheKeys.isGuest) == true)
+                      const CreateAccountBar(),
                     const SizedBox(height: 25),
 
                     // Categories

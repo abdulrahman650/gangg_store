@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gangg_store/features/search/presentation/screens/search_screen.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_cubit.dart';
+import '../../../../core/utils/guest_guard.dart';
 import '../../../cart/presentation/screens/cart_screen.dart';
 import '../../../category/presentation/screens/category_screen.dart';
 import '../../../favourites/presentation/screens/wishlist_tab.dart';
@@ -75,10 +76,25 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
               unselectedItemColor: AppColors.darkGray,
               currentIndex: currentScreen,
               onTap: (index) {
-                setState(() {
-                  currentScreen = index;
-                });
-                controller.jumpToPage(index);
+                if (index == 0) {
+                  setState(() {
+                    currentScreen = index;
+                  });
+
+                  controller.jumpToPage(index);
+                  return;
+                }
+
+                GuestGuard.run(
+                  context,
+                  onAuthenticated: () {
+                    setState(() {
+                      currentScreen = index;
+                    });
+
+                    controller.jumpToPage(index);
+                  },
+                );
               },
               items: const [
                 BottomNavigationBarItem(
@@ -131,11 +147,16 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
                   icon: const Icon(Icons.search),
                   color: AppColors.primary,
                   onPressed: () {
-                    Navigator.push(
+                    GuestGuard.run(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => const SearchScreen(),
-                      ),
+                      onAuthenticated: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const SearchScreen(),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),
@@ -143,29 +164,20 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
                   icon: const Icon(Icons.card_travel),
                   color: AppColors.primary,
                   onPressed: () {
-                    Navigator.push(
+                    GuestGuard.run(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => const CartScreen(),
-                      ),
+                      onAuthenticated: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const CartScreen(),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),
               ],
-              //   currentScreen == 0
-              //       ? "Home"
-              //       : currentScreen == 1
-              //           ? "Category"
-              //           : currentScreen == 2
-              //               ? "Wishlist"
-              //               : "Profile",
-              //   style: const TextStyle(
-              //     color: AppColors.primary,
-              //     fontSize: 20,
-              //     fontWeight: FontWeight.bold,
-              //   ),
-              // ),
-              // centerTitle: true,
             )
         )
     );

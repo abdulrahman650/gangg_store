@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gangg_store/features/auth/presentation/screens/login_screen.dart';
 
 import '../../../../core/theme/app_colors.dart';
 class BottomRegisterScreen extends StatelessWidget {
@@ -32,7 +33,12 @@ class BottomRegisterScreen extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: () => Navigator.pop(context),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const LoginView(),
+                ),
+              ),
               child: Text(
                 'Login',
                 style: textTheme.titleSmall?.copyWith(

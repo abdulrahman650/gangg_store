@@ -3,7 +3,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../core/services/cache_helper.dart';
+import '../../../../core/services/cache_keys.dart';
 import '../../../auth/presentation/screens/register_screen.dart';
+import '../../../layout/presentation/screens/layout_screen.dart';
 //صفحه الاسبلاش التانيه
 class SignInAndGuestScreen extends StatelessWidget {
   const SignInAndGuestScreen({super.key});
@@ -35,7 +38,6 @@ class SignInAndGuestScreen extends StatelessWidget {
               Gap(40),
               ElevatedButton(
                 onPressed: () {
-                  //لما ندوس على التسجيل يودينا على سكرينه تسجيل الدخول
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => const RegisterView ()),
@@ -61,8 +63,23 @@ class SignInAndGuestScreen extends StatelessWidget {
               Gap(20),
 
               ElevatedButton(
-                onPressed: () {
-                  // Continue as guest
+                onPressed: () async {
+                  await CacheHelper.saveData(
+                    key: CacheKeys.isGuest,
+                    value: true,
+                  );
+
+                  await CacheHelper.saveData(
+                    key: CacheKeys.isLoggedIn,
+                    value: false,
+                  );
+
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const Layout(),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey.shade200,

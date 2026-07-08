@@ -63,6 +63,10 @@ class AuthCubit extends Cubit<AuthState> {
         key: CacheKeys.isLoggedIn,
         value: true,
       );
+      await CacheHelper.saveData(
+        key: CacheKeys.isGuest,
+        value: false,
+      );
 
       emit(LoginSuccess(response));
       debugPrint("====== LOGIN SUCCESS ======");

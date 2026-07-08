@@ -3,6 +3,8 @@ import 'package:gangg_store/core/theme/app_colors.dart';
 import 'package:gangg_store/features/category/presentation/screens/category_screen.dart';
 import 'package:gangg_store/features/home/presentation/widgets/category_item.dart';
 
+import '../../../../core/utils/guest_guard.dart';
+
 class Category extends StatelessWidget {
   const Category({super.key});
 
@@ -23,12 +25,7 @@ class Category extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (_) => const CategoryScreen(),
-                  //   ),
-                  // );
+                GuestGuard.run(context, onAuthenticated: () {});
               },
               child: const Text(
                 'View All',
@@ -53,7 +50,6 @@ class Category extends StatelessWidget {
               CategoryItem(IconImageName: 'jewelry', label: 'Jewelry'),
               CategoryItem(IconImageName: 'glasses', label: 'Eyewear'),
               CategoryItem(IconImageName: "belts", label: 'Belts'),
-
             ],
           ),
         ),

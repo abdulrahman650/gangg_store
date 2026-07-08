@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/services/cache_helper.dart';
+import '../../../../core/services/cache_keys.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_cubit.dart';
 import '../../../../core/widgets/section_switch_theme.dart';
+import '../../../layout/presentation/screens/layout_screen.dart';
 import '../screens/register_screen.dart';
+
 class BottomRegisterScreen extends StatelessWidget {
   const BottomRegisterScreen({super.key});
 
@@ -24,13 +28,10 @@ class BottomRegisterScreen extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: ()
-              {
+              onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => const RegisterView(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const RegisterView()),
                 );
               },
               child: Text(
@@ -46,8 +47,15 @@ class BottomRegisterScreen extends StatelessWidget {
         const SizedBox(height: 16),
         // Continue as Guest
         GestureDetector(
-          onTap: () {
-            // TODO: Continue as Guest
+          onTap: () async {
+            await CacheHelper.saveData(key: CacheKeys.isGuest, value: true);
+
+            await CacheHelper.saveData(key: CacheKeys.isLoggedIn, value: false);
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const Layout()),
+            );
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -60,17 +68,11 @@ class BottomRegisterScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 4),
-              Icon(
-                Icons.arrow_forward,
-                color: AppColors.primary,
-                size: 16,
-              ),
+              Icon(Icons.arrow_forward, color: AppColors.primary, size: 16),
             ],
           ),
         ),
         const SizedBox(height: 24),
-
-
       ],
     );
   }

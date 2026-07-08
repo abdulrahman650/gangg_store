@@ -46,6 +46,7 @@ class RegisterView extends StatelessWidget {
         body: SafeArea(
           child: Column(
             children: [
+              const Gap(24),
               const CustomAppBar(),
               const Gap(24),
 

@@ -1,5 +1,5 @@
 import '../../../auth/data/model/user_model.dart';
-
+import 'package:image_picker/image_picker.dart';
 abstract class ProfileState {}
 
 class ProfileInitial extends ProfileState {}
@@ -25,4 +25,18 @@ class LogoutError extends ProfileState {
   final String message;
 
   LogoutError(this.message);
+}
+class PickImageSuccess extends ProfileState {
+  final XFile image;
+
+  PickImageSuccess(this.image);
+}
+class UpdateProfileLoading extends ProfileState {}
+
+class UpdateProfileSuccess extends ProfileState {}
+
+class UpdateProfileError extends ProfileState {
+  final String message;
+
+  UpdateProfileError(this.message);
 }

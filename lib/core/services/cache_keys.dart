@@ -5,4 +5,8 @@ class CacheKeys {
   static const String user = 'user';
   static const String email = 'email';
   static const String isGuest = 'isGuest';
+  static const profileImage = "profileImage";
+  static const fullName = "fullName";
+
+
 }

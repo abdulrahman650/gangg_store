@@ -1,5 +1,7 @@
 import '../../../../core/network/api_consumer.dart';
 import '../../../../core/network/api_endpoints.dart';
+import '../../../profile/data/model/change_password_model.dart';
+import '../../../profile/data/request/change_password_request.dart';
 import '../model/forget_password_model.dart';
 import '../model/login_model.dart';
 import '../model/register_model.dart';
@@ -41,6 +43,9 @@ abstract class AuthRemoteDataSource {
   Future<ForgotPasswordModel> forgotPassword(
       ForgotPasswordRequest request,
       );
+  Future<ChangePasswordModel> changePassword(
+      ChangePasswordRequest request,
+      );
 
 }
 
@@ -49,7 +54,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final ApiConsumer api;
 
   AuthRemoteDataSourceImpl(this.api);
-
+///login
   @override
   Future<LoginModel> login(
       LoginRequest request,
@@ -71,6 +76,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     return RegisterModel.fromJson(response);
   }
+
+  ///verifyEmail
   @override
   Future<VerifyEmailModel> verifyEmail(
       VerifyEmailRequest request,
@@ -82,7 +89,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     return VerifyEmailModel.fromJson(response);
   }
-
+///resendOtp
   @override
   Future<ResendOtpModel> resendOtp(
       ResendOtpRequest request,
@@ -107,7 +114,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     print(response.runtimeType);
     return ValidateOtpModel.fromJson(response);
   }
-
+///resetPassword
   @override
   Future<ResetPasswordModel> resetPassword(
       ResetPasswordRequest request,
@@ -131,6 +138,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     return UserModel.fromJson(response);
   }
+  ///forgotPassword
   @override
   Future<ForgotPasswordModel> forgotPassword(
       ForgotPasswordRequest request,
@@ -141,5 +149,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     );
 
     return ForgotPasswordModel.fromJson(response);
+  }
+///changePassword
+  @override
+  Future<ChangePasswordModel> changePassword(
+      ChangePasswordRequest request,
+      ) async {
+    final response = await api.post(
+      EndPoints.changePassword,
+      data: request.toJson(),
+    );
+
+    return ChangePasswordModel.fromResponse(response);
   }
 }

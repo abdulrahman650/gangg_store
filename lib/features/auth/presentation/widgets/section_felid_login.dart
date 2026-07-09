@@ -81,22 +81,7 @@ class SectionFelidLogin extends StatelessWidget {
             );
           },
         ),
-        // authVM.isLoading
-        //     ? const Center(child: CircularProgressIndicator())
-        //     : DefaultElevatedButton(
-        //     prefixSvgPath: 'assets/icons/login.svg',
-        //     label: 'Login',
-        //     backgroundColor: AppColors.primary,
-        //     onPressed: () {
-        //       Navigator.pushReplacement(
-        //         context,
-        //         MaterialPageRoute(
-        //           builder: (_) => const Layout(),
-        //         ),
-        //       );
-        //     }
-        //   // => authVM.login(),
-        // ),
+
          SizedBox(height: 24),
 
       ],

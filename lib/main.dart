@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
             // home: authCubit.isLoggedIn
             //     ? const Layout()
             //     : const LoginView(),
-            home: const SplashScreen(),
+            home: const LoginView(),
           );
         },
       ),

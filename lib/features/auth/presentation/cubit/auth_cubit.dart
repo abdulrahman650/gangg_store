@@ -5,6 +5,7 @@ import '../../../../core/errors/exceptions.dart';
 import '../../../../core/services/cache_helper.dart';
 import '../../../../core/services/cache_keys.dart';
 
+import '../../../profile/data/request/change_password_request.dart';
 import '../../data/model/user_model.dart';
 import '../../data/repos/auth_repository.dart';
 import '../../data/request/forget_password_request.dart';
@@ -15,7 +16,7 @@ import '../../data/request/reset_password_request.dart';
 import '../../data/request/validate_otp_request.dart';
 import '../../data/request/verify_email_request.dart';
 import 'auth_state.dart';
-
+import '../../data/request/change_password_request.dart';
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepository repository;
 
@@ -35,6 +36,9 @@ class AuthCubit extends Cubit<AuthState> {
   final otpController = TextEditingController();
   UserModel? currentUser;
   final newPasswordController = TextEditingController();
+
+  final currentPasswordController = TextEditingController();
+  final confirmNewPasswordController = TextEditingController();
 
   Future<void> login() async {
     if (!loginFormKey.currentState!.validate()) return;
@@ -232,6 +236,32 @@ class AuthCubit extends Cubit<AuthState> {
 
       emit(
         ResetPasswordSuccess(
+          response.message,
+        ),
+      );
+    } on AppException catch (e) {
+      emit(
+        AuthError(
+          e.message,
+        ),
+      );
+    }
+  }
+
+  Future<void> changePassword() async {
+    emit(const AuthLoading());
+
+    try {
+      final response = await repository.changePassword(
+        ChangePasswordRequest(
+          currentPassword: currentPasswordController.text,
+          newPassword: newPasswordController.text,
+          confirmNewPassword: confirmNewPasswordController.text,
+        ),
+      );
+
+      emit(
+        ChangePasswordSuccess(
           response.message,
         ),
       );

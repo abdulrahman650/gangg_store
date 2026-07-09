@@ -12,7 +12,7 @@ class AuthInitial extends AuthState {
 class AuthLoading extends AuthState {
   const AuthLoading();
 }
-
+/// Login
 class LoginSuccess extends AuthState {
   final LoginModel loginModel;
 
@@ -24,17 +24,20 @@ class AuthError extends AuthState {
 
   const AuthError(this.message);
 }
+
+///Register
 class RegisterSuccess extends AuthState {
   final String message;
 
   const RegisterSuccess(this.message);
 }
+///VerifyEmail
 class VerifyEmailSuccess extends AuthState {
   final String message;
 
   const VerifyEmailSuccess(this.message);
 }
-
+///ResendOtp
 class ResendOtpSuccess extends AuthState {
   final String message;
 
@@ -46,7 +49,7 @@ class ValidateOtpSuccess extends AuthState {
 
   const ValidateOtpSuccess(this.message);
 }
-
+///ResetPassword
 class ResetPasswordSuccess extends AuthState {
   final String message;
 
@@ -57,8 +60,17 @@ class GetUserSuccess extends AuthState {
 
   const GetUserSuccess(this.user);
 }
+
+///ForgotPassword
 class ForgotPasswordSuccess extends AuthState {
   final String message;
 
   const ForgotPasswordSuccess(this.message);
+}
+
+///ChangePassword
+class ChangePasswordSuccess extends AuthState {
+  final String message;
+
+  const ChangePasswordSuccess(this.message);
 }

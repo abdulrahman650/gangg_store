@@ -5,13 +5,17 @@ import 'package:gangg_store/core/theme/app_colors.dart';
 import 'package:gangg_store/core/widgets/section_switch_theme.dart';
 import 'package:gangg_store/features/profile/presentation/widgets/logout_batton.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import '../../../../core/services/cache_helper.dart';
+import '../../../../core/services/cache_keys.dart';
 import '../../../../core/utils/default_elevated_button.dart';
 import '../../../../core/utils/default_text_form_field.dart';
 import '../../../../core/utils/validator.dart';
 import '../cubit/profile_cubit.dart';
 import '../cubit/profile_state.dart';
 import '../../../auth/presentation/screens/login_screen.dart';
-
+import 'change_password_screen.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 class ProfileScreen extends StatefulWidget {
    ProfileScreen({super.key});
 
@@ -24,7 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final emailAddressController = TextEditingController();
   final phoneNumberController = TextEditingController();
   final passController = TextEditingController();
-
+  XFile? selectedImage;
 final isLoading= false;
 
 
@@ -40,7 +44,11 @@ final isLoading= false;
   @override
   void initState() {
     super.initState();
+    final imagePath = CacheHelper.getData(CacheKeys.profileImage);
 
+    if (imagePath != null) {
+      selectedImage = XFile(imagePath);
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProfileCubit>().getProfile();
     });
@@ -51,6 +59,27 @@ final isLoading= false;
     final textTheme = Theme.of(context).textTheme;
     return BlocConsumer<ProfileCubit, ProfileState>(
       listener: (context, state) {
+        if (state is UpdateProfileSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Profile updated successfully"),
+            ),
+          );
+        }
+
+        if (state is UpdateProfileError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+            ),
+          );
+        }
+
+        if (state is PickImageSuccess) {
+          setState(() {
+            selectedImage = state.image;
+          });
+        }
 
         if (state is LogoutSuccess) {
           Navigator.pushAndRemoveUntil(
@@ -76,13 +105,7 @@ final isLoading= false;
         }
       },
   builder: (context, state) {
-    // if (state is ProfileLoading) {
-    //   return const Scaffold(
-    //     body: Center(
-    //       child: CircularProgressIndicator(),
-    //     ),
-    //   );
-    // }
+
     if (state is ProfileError) {
       return Scaffold(
         body: Center(
@@ -119,7 +142,12 @@ final isLoading= false;
                               ),
                             ),
                             child: ClipOval(
-                              child: user?.profilePicture != null &&
+                              child: selectedImage != null
+                                  ? Image.file(
+                                File(selectedImage!.path),
+                                fit: BoxFit.cover,
+                              )
+                                  : user?.profilePicture != null &&
                                   user!.profilePicture!.isNotEmpty
                                   ? Image.network(
                                 user.profilePicture!,
@@ -134,18 +162,23 @@ final isLoading= false;
                           Positioned(
                             right: -2,
                             bottom: 2,
-                            child: Container(
-                              width: 30,
-                              height: 30,
-                              decoration: const BoxDecoration(
-                                color: AppColors.primary,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Center(
-                                child: SvgPicture.asset(
-                                  'assets/icons/camera.svg',
-                                  width: 15,
-                                  color: Colors.white,
+                            child: GestureDetector(
+                              onTap: () {
+                                context.read<ProfileCubit>().pickImage();
+                              },
+                              child: Container(
+                                width: 30,
+                                height: 30,
+                                decoration: const BoxDecoration(
+                                  color: AppColors.primary,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                    'assets/icons/camera.svg',
+                                    width: 15,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
@@ -192,26 +225,57 @@ final isLoading= false;
                         validator: Validators.validateName,
                       ),const SizedBox(height: 18),
                       ///phone
-                      DefaultTextFormField(
-                        hintText: 'Phone Number',
-                        borderColor: AppColors.primary,
-                        controller: phoneNumberController,
-                        prefixIconImageName: 'phone',
-                        validator: Validators.validateName,
-                      ),const SizedBox(height: 18),
+                      // DefaultTextFormField(
+                      //   hintText: 'Phone Number',
+                      //   borderColor: AppColors.primary,
+                      //   controller: phoneNumberController,
+                      //   prefixIconImageName: 'phone',
+                      //   validator: Validators.validateName,
+                      // ),const SizedBox(height: 18),
                       ///password
-                      DefaultTextFormField(
-                        hintText: 'Password',
-                        controller: passController,
-                        borderColor: AppColors.primary,
-                        prefixIconImageName: 'lock',
-                        validator: Validators.validateName,
-                      ),const SizedBox(height: 18),
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.primary),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ListTile(
+                          leading: SvgPicture.asset(
+                            'assets/icons/lock.svg',
+                            width: 22,
+                          ),
+                          title: const Text('Change Password',style: TextStyle(color: AppColors.darkGray),),
+                          trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 18),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ChangePasswordView(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      // DefaultTextFormField(
+                      //   hintText: 'Password',
+                      //   controller: passController,
+                      //   borderColor: AppColors.primary,
+                      //   prefixIconImageName: 'lock',
+                      //   validator: Validators.validateName,
+                      // ),const SizedBox(height: 18),
+                      const SizedBox(height: 18),
                       ///save change
-                      DefaultElevatedButton(
+                      state is UpdateProfileLoading
+                          ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                          : DefaultElevatedButton(
                         label: 'Save Changes',
                         backgroundColor: AppColors.primary,
                         onPressed: () {
+                          context.read<ProfileCubit>().updateProfile(
+                            fullName: fullNameController.text.trim(),
+                            email: emailAddressController.text.trim(),
+                          );
                         },
                       ),
 

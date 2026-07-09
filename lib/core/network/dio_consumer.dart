@@ -24,7 +24,7 @@ class DioConsumer implements ApiConsumer {
     );
   }
 
-
+///Exception
   RemoteException _handleDioException(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
@@ -51,6 +51,7 @@ class DioConsumer implements ApiConsumer {
     }
   }
 
+///get
   @override
   Future<dynamic> get(
       String path, {
@@ -70,6 +71,7 @@ class DioConsumer implements ApiConsumer {
     }
   }
 
+///post
   @override
   Future<dynamic> post(
       String path, {
@@ -91,6 +93,7 @@ class DioConsumer implements ApiConsumer {
     }
   }
 
+///put
   @override
   Future<dynamic> put(
       String path, {
@@ -112,6 +115,7 @@ class DioConsumer implements ApiConsumer {
     }
   }
 
+///patch
   @override
   Future<dynamic> patch(
       String path, {
@@ -133,6 +137,7 @@ class DioConsumer implements ApiConsumer {
     }
   }
 
+///delete
   @override
   Future<dynamic> delete(
       String path, {

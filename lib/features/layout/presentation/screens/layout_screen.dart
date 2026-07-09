@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gangg_store/features/search/presentation/screens/search_screen.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_cubit.dart';
@@ -102,11 +103,11 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
                   label: "Home",
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.cart, size: 20),
+                  icon: Icon(CupertinoIcons.square_grid_2x2, size: 20),
                   label: "Cart",
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.favorite_border, size: 20),
+                  icon: Icon(Icons.favorite_border,size: 20),
                   label: "Favorite",
                 ),
                 BottomNavigationBarItem(

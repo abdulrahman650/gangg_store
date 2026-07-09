@@ -189,7 +189,6 @@ final isLoading= false;
                       Text(
                         user?.fullName ?? '',
                         style: textTheme.headlineSmall?.copyWith(
-                          // color: AppColors.black,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -255,13 +254,6 @@ final isLoading= false;
                           },
                         ),
                       ),
-                      // DefaultTextFormField(
-                      //   hintText: 'Password',
-                      //   controller: passController,
-                      //   borderColor: AppColors.primary,
-                      //   prefixIconImageName: 'lock',
-                      //   validator: Validators.validateName,
-                      // ),const SizedBox(height: 18),
                       const SizedBox(height: 18),
                       ///save change
                       state is UpdateProfileLoading
@@ -278,7 +270,6 @@ final isLoading= false;
                           );
                         },
                       ),
-
 
                       const SizedBox(height: 16),
                       state is LogoutLoading

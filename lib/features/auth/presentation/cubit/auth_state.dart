@@ -18,7 +18,6 @@ class LoginSuccess extends AuthState {
 
   const LoginSuccess(this.loginModel);
 }
-
 class AuthError extends AuthState {
   final String message;
 
@@ -43,7 +42,7 @@ class ResendOtpSuccess extends AuthState {
 
   const ResendOtpSuccess(this.message);
 }
-
+///ValidateOtp
 class ValidateOtpSuccess extends AuthState {
   final String message;
 
@@ -55,6 +54,7 @@ class ResetPasswordSuccess extends AuthState {
 
   const ResetPasswordSuccess(this.message);
 }
+///GetUser
 class GetUserSuccess extends AuthState {
   final UserModel user;
 
@@ -71,6 +71,5 @@ class ForgotPasswordSuccess extends AuthState {
 ///ChangePassword
 class ChangePasswordSuccess extends AuthState {
   final String message;
-
   const ChangePasswordSuccess(this.message);
 }

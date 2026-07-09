@@ -8,8 +8,8 @@ class SplashScreen extends StatefulWidget {
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
-
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
   @override
@@ -52,7 +52,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Spacer(),
-
                 Image.asset(
                   "assets/icons/logo_gang.png",
                   height: 250,
@@ -101,7 +100,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  "ENTERING STORE",
+                  "GANG STORE",
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 12,

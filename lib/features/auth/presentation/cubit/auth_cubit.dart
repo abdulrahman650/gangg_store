@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/services/cache_helper.dart';
 import '../../../../core/services/cache_keys.dart';
-
 import '../../../profile/data/request/change_password_request.dart';
 import '../../data/model/user_model.dart';
 import '../../data/repos/auth_repository.dart';
@@ -16,30 +14,30 @@ import '../../data/request/reset_password_request.dart';
 import '../../data/request/validate_otp_request.dart';
 import '../../data/request/verify_email_request.dart';
 import 'auth_state.dart';
-import '../../data/request/change_password_request.dart';
+
+
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepository repository;
 
   AuthCubit(this.repository) : super(const AuthInitial());
 
-  /// Login
-  final loginFormKey = GlobalKey<FormState>();
 
+  final loginFormKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   final registerFormKey = GlobalKey<FormState>();
-
   final firstNameController = TextEditingController();
-
   final lastNameController = TextEditingController();
   final otpController = TextEditingController();
+
   UserModel? currentUser;
   final newPasswordController = TextEditingController();
 
   final currentPasswordController = TextEditingController();
   final confirmNewPasswordController = TextEditingController();
 
+  /// Login
   Future<void> login() async {
     if (!loginFormKey.currentState!.validate()) return;
 
@@ -80,6 +78,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(const AuthError("Something went wrong"));
     }
   }
+  ///register
   Future<void> register() async {
     if (!registerFormKey.currentState!.validate()) return;
 
@@ -102,6 +101,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(const AuthError("Something went wrong"));
     }
   }
+
   @override
   Future<void> close() {
     emailController.dispose();
@@ -113,6 +113,8 @@ class AuthCubit extends Cubit<AuthState> {
 
     return super.close();
   }
+
+  ///verifyEmail
   Future<void> verifyEmail({
     required String email,
   }) async {
@@ -139,6 +141,8 @@ class AuthCubit extends Cubit<AuthState> {
       );
     }
   }
+
+  ///resendOtp
   Future<void> resendOtp({
     required String email,
   }) async {
@@ -164,6 +168,8 @@ class AuthCubit extends Cubit<AuthState> {
       );
     }
   }
+
+  ///validateOtp
   Future<void> validateOtp({
     required String email,
   }) async {
@@ -195,6 +201,7 @@ class AuthCubit extends Cubit<AuthState> {
 
     }
   }
+  ///forgotPassword
   Future<void> forgotPassword({
     required String email,
   }) async {
@@ -220,6 +227,7 @@ class AuthCubit extends Cubit<AuthState> {
       );
     }
   }
+  ///resetPassword
   Future<void> resetPassword({
     required String email,
   }) async {
@@ -247,7 +255,7 @@ class AuthCubit extends Cubit<AuthState> {
       );
     }
   }
-
+///changePassword
   Future<void> changePassword() async {
     emit(const AuthLoading());
 
@@ -273,6 +281,7 @@ class AuthCubit extends Cubit<AuthState> {
       );
     }
   }
+  ///getMe
   Future<void> getMe() async {
     emit(AuthLoading());
 

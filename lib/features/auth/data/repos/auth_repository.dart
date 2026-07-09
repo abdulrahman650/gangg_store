@@ -52,17 +52,20 @@ class AuthRepositoryImpl implements AuthRepository {
 
   AuthRepositoryImpl(this.remoteDataSource);
 
+  ///login
   @override
   Future<LoginModel> login(
       LoginRequest request,
       ) async {
     return await remoteDataSource.login(request);
   }
-
+///register
   @override
   Future<RegisterModel> register(RegisterRequest request) {
     return remoteDataSource.register(request);
   }
+
+  ///verifyEmail
   @override
   Future<VerifyEmailModel> verifyEmail(
       VerifyEmailRequest request,
@@ -70,6 +73,7 @@ class AuthRepositoryImpl implements AuthRepository {
     return remoteDataSource.verifyEmail(request);
   }
 
+  ///resendOtp
   @override
   Future<ResendOtpModel> resendOtp(
       ResendOtpRequest request,
@@ -77,7 +81,7 @@ class AuthRepositoryImpl implements AuthRepository {
     return remoteDataSource.resendOtp(request);
   }
 
-
+///validateOtp
   @override
   Future<ValidateOtpModel> validateOtp(
       ValidateOtpRequest request,
@@ -85,13 +89,23 @@ class AuthRepositoryImpl implements AuthRepository {
     return remoteDataSource.validateOtp(request);
   }
 
+  ///forgotPassword
+  @override
+  Future<ForgotPasswordModel> forgotPassword(
+      ForgotPasswordRequest request,
+      ) {
+    return remoteDataSource.forgotPassword(request);
+  }
+
+  ///resetPassword
   @override
   Future<ResetPasswordModel> resetPassword(
       ResetPasswordRequest request,
       ) {
     return remoteDataSource.resetPassword(request);
   }
-  
+
+  ///changePassword
   @override
   Future<ChangePasswordModel> changePassword(
       ChangePasswordRequest request,
@@ -99,15 +113,11 @@ class AuthRepositoryImpl implements AuthRepository {
     return remoteDataSource.changePassword(request);
   }
 
+  ///getMe
   @override
   Future<UserModel> getMe() {
     return remoteDataSource.getMe();
   }
 
-  @override
-  Future<ForgotPasswordModel> forgotPassword(
-      ForgotPasswordRequest request,
-      ) {
-    return remoteDataSource.forgotPassword(request);
-  }
+
 }

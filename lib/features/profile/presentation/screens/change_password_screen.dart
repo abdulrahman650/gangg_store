@@ -51,7 +51,22 @@ class ChangePasswordView extends StatelessWidget {
                         child: Column(
                             children: [
                             const SizedBox(height: 24),
-                        const CustomAppBar(),
+                       Row(
+                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                         children: [
+                           IconButton(
+                             icon: const Icon(Icons.arrow_back),
+                             color: AppColors.primary,
+                             onPressed: () {
+                               Navigator.pop(
+                                 context,
+                               );
+                             },
+                           ), const CustomAppBar(),
+                           SizedBox(),
+                         ],
+                       ),
+
                         const SizedBox(height: 50),
 
                         Container(

@@ -7,6 +7,7 @@ import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
+import 'features/layout/presentation/screens/layout_screen.dart';
 import 'features/profile/presentation/cubit/profile_cubit.dart';
 import 'features/splash/presentation/screens/splash_screen.dart';
 
@@ -15,7 +16,6 @@ Future<void> main() async {
 
   await CacheHelper.init();
   await setupServiceLocator();
-
 
   runApp(const MyApp());
 }
@@ -48,10 +48,10 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.customLightTheme,
             darkTheme: AppTheme.customDarkTheme,
             themeMode: themeMode,
-            // home: authCubit.isLoggedIn
-            //     ? const Layout()
-            //     : const LoginView(),
-            home: const LoginView(),
+            home: authCubit.isLoggedIn
+                ? const Layout()
+                : const LoginView(),
+            // home: const LoginView(),
           );
         },
       ),

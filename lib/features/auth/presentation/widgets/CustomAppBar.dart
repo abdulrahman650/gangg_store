@@ -17,7 +17,7 @@ class CustomAppBar extends StatelessWidget {
         // ),
         Center(
           child: Text(
-            '       Gang Store',
+            '   Gang Store',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               color: AppColors.primary,
               fontWeight: FontWeight.bold,

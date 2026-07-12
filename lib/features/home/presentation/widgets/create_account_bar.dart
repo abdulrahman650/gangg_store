@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
+import 'package:gangg_store/features/auth/presentation/screens/login_screen.dart';
+import 'package:gangg_store/features/auth/presentation/screens/register_screen.dart';
 
 class CreateAccountBar extends StatelessWidget {
   const CreateAccountBar({
@@ -64,7 +66,14 @@ class CreateAccountBar extends StatelessWidget {
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const RegisterView(),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     shape: RoundedRectangleBorder(
@@ -86,7 +95,14 @@ class CreateAccountBar extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const LoginView(),
+                    ),
+                  );
+                },
                 child: const Text(
                   'Sign In',
                   style: TextStyle(

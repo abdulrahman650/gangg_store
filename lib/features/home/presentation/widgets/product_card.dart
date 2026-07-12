@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
 import 'package:gangg_store/features/prodeuct_details/presentation/screens/product_details_screen.dart';
-
+import '../../../../core/utils/guest_guard.dart';
 class ProductCard extends StatelessWidget {
   const ProductCard({super.key, required this.title, required this.price});
 
@@ -12,9 +12,16 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(
+        GuestGuard.run(
           context,
-          MaterialPageRoute(builder: (context) => const ProductDetailScreen()),
+          onAuthenticated: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ProductDetailScreen(),
+              ),
+            );
+          },
         );
       },
 
@@ -47,16 +54,27 @@ class ProductCard extends StatelessWidget {
                   Positioned(
                     top: 10,
                     right: 10,
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: const BoxDecoration(
-                        color: AppColors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.favorite_border,
-                        size: 16,
-                        color: AppColors.black,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(50),
+                      onTap: () {
+                        GuestGuard.run(
+                          context,
+                          onAuthenticated: () {
+                            // Add/Remove Favorite
+                          },
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: const BoxDecoration(
+                          color: AppColors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.favorite_border,
+                          size: 16,
+                          color: AppColors.black,
+                        ),
                       ),
                     ),
                   ),
@@ -95,7 +113,14 @@ class ProductCard extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        GuestGuard.run(
+                          context,
+                          onAuthenticated: () {
+                            // Add To Cart
+                          },
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         elevation: 0,

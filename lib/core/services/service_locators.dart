@@ -1,5 +1,8 @@
 
 import 'package:dio/dio.dart';
+import 'package:gangg_store/features/cart/data/datasource/Cart_Remote_Data_Source.dart';
+import 'package:gangg_store/features/cart/data/repos/cart_repositry.dart';
+import 'package:gangg_store/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:get_it/get_it.dart';
 import '../../features/auth/data/repos/auth_repository.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
@@ -43,4 +46,22 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<ProfileCubit>(
         () => ProfileCubit(getIt()),
   );
+
+ getIt.registerLazySingleton<CartRemoteDataSource>(
+  () => CartRemoteDataSourceImpl(
+    getIt<ApiConsumer>(),
+  ),
+);
+
+getIt.registerLazySingleton<CartRepositry>(
+  () => CartRepositryImpl(
+    getIt<CartRemoteDataSource>(),
+  ),
+);
+
+getIt.registerFactory<CartCubit>(
+  () => CartCubit(
+     repositry: getIt<CartRepositry>(),
+  ),
+);
 }

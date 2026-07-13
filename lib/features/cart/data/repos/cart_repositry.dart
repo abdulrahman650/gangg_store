@@ -15,7 +15,9 @@ abstract class CartRepositry {
 
 
 class CartRepositryImpl implements CartRepositry{
-  late final CartRemoteDataSource remoteDataSource;
+  final CartRemoteDataSource remoteDataSource;
+  CartRepositryImpl(this.remoteDataSource);
+  
   @override
   Future<CartModel> addToCart(AddToCartRequest request) {
   

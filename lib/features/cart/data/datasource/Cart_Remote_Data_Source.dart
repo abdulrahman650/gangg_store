@@ -25,7 +25,8 @@ Future<GetCartModel>getCart();
 }
 
 class CartRemoteDataSourceImpl implements CartRemoteDataSource{
-  late final ApiConsumer api;
+  final ApiConsumer api;
+  CartRemoteDataSourceImpl(this.api);
   @override
   Future<CartModel> addToCart(AddToCartRequest request)async {
   final response=await api.post(

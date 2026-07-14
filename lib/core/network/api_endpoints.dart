@@ -18,3 +18,16 @@ class EndPoints {
   static const String getReview = 'reviews/{productId}';
   static const String postReview = 'reviews/{productId}​';
 }
+
+  //cart
+  static const String getCart ='cart';
+  static const String addToCart='cart/items';
+  static const String decrementCartItem ='cart/items/decrement';
+  static const String applyCoupon ='cart/apply-coupon';
+  
+  static String deleteCartItem(String id)=>'cart/items/$id';
+  static String updateCartItem(String id)=>'cart/items/$id';
+
+}
+
+

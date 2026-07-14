@@ -7,6 +7,9 @@ import 'package:gangg_store/features/cart/data/model/model.dart';
 import 'package:gangg_store/features/cart/data/request/add_to_cart_request.dart';
 import 'package:gangg_store/features/cart/data/request/decrement_cart_item.dart';
 
+import '../../../../core/network/api_endpoints.dart';
+import '../request/updateCartRequest.dart';
+
 abstract class CartRemoteDataSource {
 Future<CartModel>addToCart(
   AddToCartRequest request,
@@ -21,6 +24,9 @@ Future<void>deleteCartItem({
 });
 
 Future<GetCartModel>getCart();
+
+Future<CartModel> updateCartItem(UpdateCartRequest request);
+
 
 }
 
@@ -61,6 +67,18 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource{
       EndPoints.getCart
     );
     return GetCartModel.fromJson(response);
+  }
+  @override
+  Future<CartModel> updateCartItem(
+      UpdateCartRequest request,
+      ) async {
+
+    final response = await api.put(
+      EndPoints.updateCartItem(request.id),
+      data: request.toJson(),
+    );
+
+    return CartModel.fromJson(response);
   }
 
 }

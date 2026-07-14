@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gangg_store/core/services/service_locators.dart'; // <-- import getIt
+import 'package:gangg_store/core/services/service_locators.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
 import 'package:gangg_store/core/theme/theme_cubit.dart';
+import 'package:gangg_store/features/cart/presentation/cubit/cart_cubit.dart';
+import 'package:gangg_store/features/cart/presentation/cubit/cart_state.dart';
 import 'package:gangg_store/features/cart/presentation/screens/cart_screen.dart';
 import 'package:gangg_store/features/home/data/model/product_model.dart';
 import 'package:gangg_store/features/home/presentation/widgets/product_card.dart';
@@ -29,61 +31,122 @@ class ProductDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // If we have product object, use it directly without API call
     if (product != null) {
-      return BlocProvider(
-        create: (context) => getIt<ProductDetailsCubit>() // <-- استخدم getIt
-          ..emit(ProductDetailsLoaded(
-            product: product!,
-          )),
-        child: _ProductDetailsView(product: product!),
+      return MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) {
+              final cubit = getIt<ProductDetailsCubit>();
+              cubit.setProductDirectly(product!);
+              return cubit;
+            },
+          ),
+          BlocProvider(
+            create: (context) => getIt<CartCubit>(),
+          ),
+        ],
+        child: BlocListener<CartCubit, CartState>(
+          listener: (context, state) {
+            if (state is GetCartSuccess) {
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Item added to cart successfully'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            } else if (state is GetCartFailure) {
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Error: ${state.message}'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          child: _ProductDetailsView(product: product!),
+        ),
       );
     }
 
     // Otherwise fetch by ID
-    return BlocProvider(
-      create: (context) => getIt<ProductDetailsCubit>() // <-- استخدم getIt
-        ..fetchProductDetails(productId!),
-      child: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
-        builder: (context, state) {
-          if (state is ProductDetailsLoading) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => getIt<ProductDetailsCubit>()
+            ..fetchProductDetails(productId!),
+        ),
+        BlocProvider(
+          create: (context) => getIt<CartCubit>(),
+        ),
+      ],
+      child: BlocListener<CartCubit, CartState>(
+        listener: (context, state) {
+          if (state is GetCartSuccess) {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Item added to cart successfully'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          } else if (state is GetCartFailure) {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Error: ${state.message}'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
+        child: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+          builder: (context, state) {
+            if (state is ProductDetailsLoading) {
+              return const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(color: AppColors.primary),
+                ),
+              );
+            }
+
+            if (state is ProductDetailsError) {
+              return Scaffold(
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                      const SizedBox(height: 16),
+                      Text(state.message),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          context.read<ProductDetailsCubit>().fetchProductDetails(productId!);
+                        },
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            if (state is ProductDetailsLoaded) {
+              return _ProductDetailsView(product: state.product);
+            }
+
             return const Scaffold(
               body: Center(
                 child: CircularProgressIndicator(color: AppColors.primary),
               ),
             );
-          }
-
-          if (state is ProductDetailsError) {
-            return Scaffold(
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.error_outline, size: 48, color: Colors.red),
-                    const SizedBox(height: 16),
-                    Text(state.message),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        context.read<ProductDetailsCubit>().fetchProductDetails(productId!);
-                      },
-                      child: const Text('Retry'),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-
-          if (state is ProductDetailsLoaded) {
-            return _ProductDetailsView(product: state.product);
-          }
-
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(color: AppColors.primary),
-            ),
-          );
-        },
+          },
+        ),
       ),
     );
   }
@@ -173,6 +236,17 @@ class _ProductDetailsView extends StatelessWidget {
                       width: double.infinity,
                       height: double.infinity,
                       alignment: Alignment.center,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Container(
+                          color: AppColors.gray,
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        );
+                      },
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
                           color: AppColors.gray,

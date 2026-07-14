@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gangg_store/core/services/service_locators.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
+import 'package:gangg_store/features/cart/presentation/cubit/cart_cubit.dart';
+import 'package:gangg_store/features/cart/presentation/cubit/cart_state.dart';
 import 'package:gangg_store/features/home/data/model/product_model.dart';
 import 'package:gangg_store/features/prodeuct_details/presentation/screens/product_details_screen.dart';
+import 'package:gangg_store/features/favourites/presentation/cubit/wishlist_cubit.dart';
 import '../../../../core/utils/guest_guard.dart';
+import '../../../favourites/presentation/cubit/wishlist_state.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductModel product;
@@ -15,7 +21,6 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasDiscount = product.discountPercentage > 0;
-    final discountedPrice = product.discountedPrice;
 
     return InkWell(
       onTap: () {
@@ -59,6 +64,17 @@ class ProductCard extends StatelessWidget {
                         width: double.infinity,
                         height: double.infinity,
                         alignment: Alignment.center,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Container(
+                            color: AppColors.gray,
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          );
+                        },
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
                             color: AppColors.gray,
@@ -105,21 +121,26 @@ class ProductCard extends StatelessWidget {
                         GuestGuard.run(
                           context,
                           onAuthenticated: () {
-                            // Add/Remove Favorite
+                            getIt<WishlistCubit>().toggleFavorite(product);
                           },
                         );
                       },
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: const BoxDecoration(
-                          color: AppColors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.favorite_border,
-                          size: 16,
-                          color: AppColors.black,
-                        ),
+                      child: BlocBuilder<WishlistCubit, WishlistState>(
+                        builder: (context, state) {
+                          final isFavorite = getIt<WishlistCubit>().isFavorite(product.id);
+                          return Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: const BoxDecoration(
+                              color: AppColors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              isFavorite ? Icons.favorite : Icons.favorite_border,
+                              size: 16,
+                              color: isFavorite ? Colors.red : AppColors.black,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -197,7 +218,7 @@ class ProductCard extends StatelessWidget {
                         GuestGuard.run(
                           context,
                           onAuthenticated: () {
-                            // Add To Cart
+                            _showAddToCartDialog(context);
                           },
                         );
                       },
@@ -225,6 +246,46 @@ class ProductCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showAddToCartDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return BlocListener<CartCubit, CartState>(
+          listener: (context, state) {
+            if (state is GetCartSuccess) {
+              Navigator.of(context, rootNavigator: true).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${product.name} added to cart'),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            } else if (state is GetCartFailure) {
+              Navigator.of(context, rootNavigator: true).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Error: ${state.message}'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          child: AlertDialog(
+            title: const Text('Add to Cart'),
+            content: const Text('Adding item to cart...'),
+            backgroundColor: Theme.of(dialogContext).scaffoldBackgroundColor,
+          ),
+        );
+      },
+    );
+
+    context.read<CartCubit>().addToCart(
+      productId: product.id,
+      quantity: 1,
     );
   }
 }

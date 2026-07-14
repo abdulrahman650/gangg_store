@@ -1,117 +1,147 @@
 import 'package:dio/dio.dart';
-import 'package:gangg_store/features/prodeuct_details/data/repos/product_details_repository.dart';
-import 'package:gangg_store/features/prodeuct_details/presentation/cubit/product_details_cubit.dart';
-import 'package:gangg_store/features/cart/data/datasource/Cart_Remote_Data_Source.dart';
-import 'package:gangg_store/features/cart/data/repos/cart_repositry.dart';
-import 'package:gangg_store/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:get_it/get_it.dart';
-import '../../features/auth/data/repos/auth_repository.dart';
-import '../../features/auth/presentation/cubit/auth_cubit.dart';
-import '../../features/home/data/repos/home_repository.dart';
-import '../../features/home/presentation/cubit/home_cubit.dart';
-import '../../features/profile/presentation/cubit/profile_cubit.dart';
+
 import '../network/api_consumer.dart';
 import '../network/dio_consumer.dart';
+
 import '../../features/auth/data/datasource/auth_remote_data_source.dart';
+import '../../features/auth/data/repos/auth_repository.dart';
+import '../../features/auth/presentation/cubit/auth_cubit.dart';
+
+import '../../features/home/data/repos/home_repository.dart';
+import '../../features/home/presentation/cubit/home_cubit.dart';
+
+import '../../features/profile/presentation/cubit/profile_cubit.dart';
+
+import '../../features/prodeuct_details/data/repos/product_details_repository.dart';
+import '../../features/prodeuct_details/presentation/cubit/product_details_cubit.dart';
+
+import '../../features/cart/data/datasource/Cart_Remote_Data_Source.dart';
+import '../../features/cart/data/repos/cart_repositry.dart';
+import '../../features/cart/presentation/cubit/cart_cubit.dart';
+
 import 'package:gangg_store/features/reviews/data/datasource/rewies_remote_data_source.dart';
 import 'package:gangg_store/features/reviews/data/repos/review_repository.dart';
 import 'package:gangg_store/features/reviews/presentation/cubit/review_cubit.dart';
 
+import '../../features/favourites/presentation/cubit/wishlist_cubit.dart';
+
 final getIt = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
-  // Dio
-  getIt.registerLazySingleton<Dio>(
-    () => Dio(),
-  );
-  getIt.registerLazySingleton<Dio>(() => Dio());
+  // ===================== Dio =====================
 
-  // Api Consumer
+  getIt.registerLazySingleton<Dio>(
+        () => Dio(),
+  );
+
+  // ===================== Api Consumer =====================
+
   getIt.registerLazySingleton<ApiConsumer>(
-    () => DioConsumer(
+        () => DioConsumer(
       dio: getIt<Dio>(),
     ),
-    () => DioConsumer(dio: getIt<Dio>()),
   );
 
-  // Auth
+  // ===================== Auth =====================
+
   getIt.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(
+        () => AuthRemoteDataSourceImpl(
       getIt<ApiConsumer>(),
     ),
   );
 
   getIt.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(
+        () => AuthRepositoryImpl(
       getIt<AuthRemoteDataSource>(),
     ),
   );
 
   getIt.registerFactory<AuthCubit>(
-    () => AuthCubit(
+        () => AuthCubit(
       getIt<AuthRepository>(),
     ),
   );
 
-  // Home
+  // ===================== Home =====================
+
   getIt.registerLazySingleton<HomeRepository>(
-    () => HomeRepositoryImpl(getIt<ApiConsumer>()),
+        () => HomeRepositoryImpl(
+      getIt<ApiConsumer>(),
+    ),
   );
 
   getIt.registerFactory<HomeCubit>(
-    () => HomeCubit(getIt<HomeRepository>()),
+        () => HomeCubit(
+      getIt<HomeRepository>(),
+    ),
   );
 
-  // Product Details
+  // ===================== Product Details =====================
+
   getIt.registerLazySingleton<ProductDetailsRepository>(
-    () => ProductDetailsRepositoryImpl(getIt<ApiConsumer>()),
+        () => ProductDetailsRepositoryImpl(
+      getIt<ApiConsumer>(),
+    ),
   );
 
   getIt.registerFactory<ProductDetailsCubit>(
-    () => ProductDetailsCubit(getIt<ProductDetailsRepository>()),
+        () => ProductDetailsCubit(
+      getIt<ProductDetailsRepository>(),
+    ),
   );
 
-  // Profile
+  // ===================== Profile =====================
+
   getIt.registerFactory<ProfileCubit>(
-    () => ProfileCubit(getIt()),
-    () => AuthRemoteDataSourceImpl(getIt<ApiConsumer>()),
+        () => ProfileCubit(
+      getIt<AuthRemoteDataSource>(),
+    ),
   );
 
-  getIt.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(getIt<AuthRemoteDataSource>()),
-  );
+  // ===================== Reviews =====================
 
-  getIt.registerFactory<AuthCubit>(() => AuthCubit(getIt<AuthRepository>()));
-
-  getIt.registerFactory<ProfileCubit>(() => ProfileCubit(getIt()));
   getIt.registerLazySingleton<ReviewRemoteDataSource>(
-    () => ReviewRemoteDataSourceImpl(getIt<ApiConsumer>()),
+        () => ReviewRemoteDataSourceImpl(
+      getIt<ApiConsumer>(),
+    ),
   );
 
   getIt.registerLazySingleton<ReviewRepository>(
-    () => ReviewRepositoryImpl(getIt<ReviewRemoteDataSource>()),
+        () => ReviewRepositoryImpl(
+      getIt<ReviewRemoteDataSource>(),
+    ),
   );
 
   getIt.registerFactory<ReviewCubit>(
-    () => ReviewCubit(getIt<ReviewRepository>()),
+        () => ReviewCubit(
+      getIt<ReviewRepository>(),
+    ),
   );
-}
 
- getIt.registerLazySingleton<CartRemoteDataSource>(
-  () => CartRemoteDataSourceImpl(
-    getIt<ApiConsumer>(),
-  ),
-);
+// ===================== Cart =====================
 
-getIt.registerLazySingleton<CartRepositry>(
-  () => CartRepositryImpl(
-    getIt<CartRemoteDataSource>(),
-  ),
-);
+  getIt.registerLazySingleton<CartRemoteDataSource>(
+        () => CartRemoteDataSourceImpl(
+      getIt<ApiConsumer>(),
+    ),
+  );
 
-getIt.registerFactory<CartCubit>(
-  () => CartCubit(
-     repositry: getIt<CartRepositry>(),
-  ),
-);
+  getIt.registerLazySingleton<CartRepositry>(
+        () => CartRepositryImpl(
+      getIt<CartRemoteDataSource>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<CartCubit>(
+        () => CartCubit(
+      repositry: getIt<CartRepositry>(),
+    ),
+  );
+
+  // ===================== Wishlist =====================
+
+  getIt.registerSingleton<WishlistCubit>(
+    WishlistCubit(),
+  );
 }

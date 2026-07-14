@@ -7,9 +7,12 @@ import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
+import 'features/cart/presentation/cubit/cart_cubit.dart';
 import 'features/home/presentation/cubit/home_cubit.dart';
 import 'features/layout/presentation/screens/layout_screen.dart';
 import 'features/profile/presentation/cubit/profile_cubit.dart';
+import 'features/reviews/presentation/screens/reviews_screen.dart';
+import 'features/favourites/presentation/cubit/wishlist_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,18 +30,31 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+
         BlocProvider<AuthCubit>(
           create: (_) => getIt<AuthCubit>(),
         ),
+
         BlocProvider<ThemeCubit>(
           create: (_) => ThemeCubit(),
         ),
+
         BlocProvider(
           create: (_) => getIt<ProfileCubit>(),
         ),
+
         BlocProvider(
           create: (_) => getIt<HomeCubit>()..fetchHomeData(),
         ),
+
+        BlocProvider<CartCubit>(
+          create: (_) => getIt<CartCubit>(),
+        ),
+
+        BlocProvider<WishlistCubit>(
+          create: (_) => getIt<WishlistCubit>(),
+        ),
+
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
@@ -49,9 +65,10 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.customLightTheme,
             darkTheme: AppTheme.customDarkTheme,
             themeMode: themeMode,
-            home: authCubit.isLoggedIn
-                ? const Layout()
-                : const LoginView(),
+            // home: authCubit.isLoggedIn
+            //     ? const Layout()
+            //     : const LoginView(),
+              home:LoginView(),
           );
         },
       ),

@@ -1,22 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
 import 'package:gangg_store/features/cart/data/model/cart_item_model.dart';
 import 'package:gangg_store/features/cart/presentation/cubit/cart_cubit.dart';
 
-class CartItem extends StatefulWidget {
+class CartItem extends StatelessWidget {
   final CartItemModel item;
-  const CartItem({super.key, 
-  required this.item, 
+
+  const CartItem({
+    super.key,
+    required this.item,
   });
 
-  @override
-  State<CartItem> createState() => _CartItemState();
-}
+  Future<void> _increment(BuildContext context) async {
+    await context.read<CartCubit>().updateQuantity(
+      cartItemId: item.itemId,
+      quantity: item.quantity + 1,
+    );
+  }
 
-class _CartItemState extends State<CartItem> {
-  
+  Future<void> _decrement(BuildContext context) async {
+    if (item.quantity == 1) {
+      await context.read<CartCubit>().deleteCartItem(
+        cartItemId: item.itemId,
+      );
+    } else {
+      await context.read<CartCubit>().updateQuantity(
+        cartItemId: item.itemId,
+        quantity: item.quantity - 1,
+      );
+    }
+  }
+
+  Future<void> _delete(BuildContext context) async {
+    await context.read<CartCubit>().deleteCartItem(
+      cartItemId: item.itemId,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -36,7 +57,7 @@ class _CartItemState extends State<CartItem> {
               width: 90,
               height: 90,
               child: Image.network(
-              widget.item.productCoverUrl,
+                item.productCoverUrl,
                 fit: BoxFit.cover,
               ),
             ),
@@ -49,7 +70,7 @@ class _CartItemState extends State<CartItem> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.item.productName,
+                  item.productName,
                   style: textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: AppColors.black,
@@ -59,7 +80,7 @@ class _CartItemState extends State<CartItem> {
                 const SizedBox(height: 4),
 
                 Text(
-                  "stock:${widget.item.productStock}",
+                  "Stock : ${item.productStock}",
                   style: textTheme.bodySmall?.copyWith(
                     color: AppColors.darkGray,
                   ),
@@ -69,7 +90,7 @@ class _CartItemState extends State<CartItem> {
 
                 Container(
                   height: 38,
-                  width: 115,
+                  width: 120,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
@@ -79,30 +100,20 @@ class _CartItemState extends State<CartItem> {
                       Expanded(
                         child: IconButton(
                           padding: EdgeInsets.zero,
-                          iconSize: 18,
-                          onPressed: () {
-                            context.read<CartCubit>().decrement(
-                            cartItemId: widget.item.itemId,
-                             quantity: 1.toString());
-                          },
-                          icon:
-                          SvgPicture.asset("assets/icons/delete.svg"),
+                          onPressed: () => _decrement(context),
+                          icon: const Icon(Icons.remove),
                         ),
                       ),
 
                       Text(
-                        widget.item.quantity.toString(),
+                        item.quantity.toString(),
                         style: textTheme.bodyMedium,
                       ),
 
                       Expanded(
                         child: IconButton(
                           padding: EdgeInsets.zero,
-                          iconSize: 18,
-                          onPressed: () {
-                            context.read<CartCubit>().addToCart(productId: widget.item.productId,
-                             quantity: 1);
-                          },
+                          onPressed: () => _increment(context),
                           icon: const Icon(Icons.add),
                         ),
                       ),
@@ -119,23 +130,17 @@ class _CartItemState extends State<CartItem> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               IconButton(
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                onPressed: () {
-                  context.read<CartCubit>().deleteCartItem(
-                  cartItemId: widget.item.itemId);
-                },
+                onPressed: () => _delete(context),
                 icon: const Icon(
                   Icons.delete_outline,
                   color: Colors.grey,
-                  size: 20,
-                )
+                ),
               ),
 
               const SizedBox(height: 40),
 
               Text(
-                "\$${widget.item.totalPrice}",
+                "\$${item.totalPrice.toStringAsFixed(2)}",
                 style: textTheme.titleMedium?.copyWith(
                   color: AppColors.primary,
                   fontWeight: FontWeight.bold,

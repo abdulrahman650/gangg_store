@@ -12,86 +12,132 @@ import '../../../../core/theme/theme_cubit.dart';
 import '../../../search/presentation/screens/search_screen.dart';
 
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CartCubit>().getCart();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return BlocProvider(
-      create: (_) => getIt<CartCubit>()..getCart(),
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: AppColors.primary,
+          onPressed: () => Navigator.pop(context),
+        ),
+        backgroundColor: context.isDark
+            ? Theme.of(context).scaffoldBackgroundColor
+            : AppColors.backgroundWhite,
+        elevation: 0,
+        title: Text(
+          'Gang Store',
+          style: textTheme.headlineSmall?.copyWith(
+            color: AppColors.primary,
+            fontWeight: FontWeight.bold,
+            fontSize: 28,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
             color: AppColors.primary,
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const SearchScreen(),
+                ),
+              );
             },
           ),
-          backgroundColor: context.isDark
-              ? Theme.of(context).scaffoldBackgroundColor
-              : AppColors.backgroundWhite,
-          elevation: 0,
-          title: Text(
-            'Gang Store',
-            style: textTheme.headlineSmall?.copyWith(
-              color: AppColors.primary,
-              fontWeight: FontWeight.bold,
-              fontSize: 28,
-            ),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              color: AppColors.primary,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const SearchScreen()),
+        ],
+      ),
+        body: BlocListener<CartCubit, CartState>(
+            listenWhen: (previous, current) => current is GetCartFailure,
+            listener: (context, state) {
+              if (state is GetCartFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message)),
                 );
-              },
-            ),
-          ],
-          //   currentScreen == 0
-          //       ? "Home"
-          //       : currentScreen == 1
-          //           ? "Category"
-          //           : currentScreen == 2
-          //               ? "Wishlist"
-          //               : "Profile",
-          //   style: const TextStyle(
-          //     color: AppColors.primary,
-          //     fontSize: 20,
-          //     fontWeight: FontWeight.bold,
-          //   ),
-          // ),
-          // centerTitle: true,
-        ),
-
-        body: BlocBuilder<CartCubit, CartState>(
-          builder: (context, state) {
-            if(state is CartLoading){
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if(state is GetCartFailure){
-              return const Center(
-                child: Text("something went wrong!"),
-              );
-            }
-            if (state is GetCartSuccess){
-              final cart =state.cart;
-              double subtotal=0;
-              for(final item in cart.cartItems){
-                subtotal+=item.totalPrice;
               }
-              final shipping= cart.cartItems.isEmpty?0.0:50.0;
-              final total = subtotal+shipping
-              ;
-            
+            },
+            child: BlocBuilder<CartCubit, CartState>(
+                buildWhen: (previous, current) =>
+                previous.runtimeType != current.runtimeType,
+                builder: (context, state) {
+                  if (state is CartLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  if (state is! GetCartSuccess) {
+                    return const SizedBox();
+                  }
+
+                  final cart = state.cart;
+
+
+                  if (cart.cartItems.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+
+                      Icon(
+                        Icons.shopping_cart_outlined,
+                        size: 90,
+                        color: Colors.grey,
+                      ),
+
+                      SizedBox(height: 20),
+
+                      Text(
+                        "Your cart is empty",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      SizedBox(height: 10),
+
+                      Text(
+                        "Add some products first",
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              double subtotal = 0;
+
+              for (final item in cart.cartItems) {
+                subtotal += item.totalPrice;
+              }
+
+              final shipping = 50.0;
+              final total = subtotal + shipping;
+
             return SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -131,7 +177,7 @@ class CartScreen extends StatelessWidget {
 
                           const SizedBox(height: 25),
 
-                        
+
 
                           const SizedBox(height: 25),
 
@@ -154,11 +200,7 @@ class CartScreen extends StatelessWidget {
                 ),
               ),
             );
-          }
-       
-     return const SizedBox();
-     }
-      ),
+          })
       ),
     );
   }

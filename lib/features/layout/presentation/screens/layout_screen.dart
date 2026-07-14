@@ -104,7 +104,7 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(CupertinoIcons.square_grid_2x2, size: 20),
-                  label: "Cart",
+                  label: "Category",
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.favorite_border,size: 20),

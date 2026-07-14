@@ -4,12 +4,17 @@ import 'package:gangg_store/features/cart/data/model/model.dart';
 import 'package:gangg_store/features/cart/data/request/add_to_cart_request.dart';
 import 'package:gangg_store/features/cart/data/request/decrement_cart_item.dart';
 
+import '../request/updateCartRequest.dart';
+
 abstract class CartRepositry {
 
   Future<CartModel>addToCart(AddToCartRequest request);
   Future<CartModel>decrement(DecrementCartItem request);
   Future<GetCartModel>getCart();
   Future<void>deleteCartItem(String cartItemId);
+  Future<CartModel> updateCartItem(
+      UpdateCartRequest request,
+      );
   
 }
 
@@ -40,6 +45,12 @@ class CartRepositryImpl implements CartRepositry{
   Future<GetCartModel> getCart() {
     return remoteDataSource.getCart();
     
+  }
+  @override
+  Future<CartModel> updateCartItem(
+      UpdateCartRequest request,
+      ) {
+    return remoteDataSource.updateCartItem(request);
   }
 
 }

@@ -1,4 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gangg_store/core/services/service_locators.dart';
+import 'package:gangg_store/features/cart/presentation/cubit/cart_cubit.dart';
+import '../../../home/data/model/product_model.dart';
 import '../../data/repos/product_details_repository.dart';
 import 'product_details_state.dart';
 
@@ -36,10 +39,26 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
   }
 
   void toggleFavorite() {
-    // TODO: Implement favorite toggle
+    if (state is ProductDetailsLoaded) {
+      final current = state as ProductDetailsLoaded;
+      emit(current.copyWith(isFavorite: !current.isFavorite));
+    }
   }
 
   void addToCart() {
-    // TODO: Implement add to cart
+    if (state is ProductDetailsLoaded) {
+      final current = state as ProductDetailsLoaded;
+
+      final cartCubit = getIt<CartCubit>();
+
+      cartCubit.addToCart(
+        productId: current.product.id,
+        quantity: current.quantity,
+      );
+    }
+  }
+
+  void setProductDirectly(ProductModel product) {
+    emit(ProductDetailsLoaded(product: product));
   }
 }

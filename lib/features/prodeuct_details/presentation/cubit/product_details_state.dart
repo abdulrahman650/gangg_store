@@ -13,21 +13,25 @@ class ProductDetailsInitial extends ProductDetailsState {}
 class ProductDetailsLoading extends ProductDetailsState {}
 
 class ProductDetailsLoaded extends ProductDetailsState {
-  final ProductModel product; // <-- غيرت من ProductDetailsModel لـ ProductModel
+  final ProductModel product;
   final int quantity;
+  final bool isFavorite;
 
   const ProductDetailsLoaded({
     required this.product,
     this.quantity = 1,
+    this.isFavorite = false,
   });
 
   ProductDetailsLoaded copyWith({
     ProductModel? product,
     int? quantity,
+    bool? isFavorite,
   }) {
     return ProductDetailsLoaded(
       product: product ?? this.product,
       quantity: quantity ?? this.quantity,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 
@@ -41,7 +45,7 @@ class ProductDetailsLoaded extends ProductDetailsState {
   String get formattedTotalPrice => '\$${totalPrice.toStringAsFixed(2)}';
 
   @override
-  List<Object?> get props => [product, quantity];
+  List<Object?> get props => [product, quantity, isFavorite];
 }
 
 class ProductDetailsError extends ProductDetailsState {

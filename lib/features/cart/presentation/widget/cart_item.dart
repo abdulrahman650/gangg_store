@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
+import 'package:gangg_store/features/cart/data/model/cart_item_model.dart';
+import 'package:gangg_store/features/cart/presentation/cubit/cart_cubit.dart';
 
 class CartItem extends StatefulWidget {
-  const CartItem({super.key});
+  final CartItemModel item;
+  const CartItem({super.key, 
+  required this.item, 
+  });
 
   @override
   State<CartItem> createState() => _CartItemState();
 }
 
 class _CartItemState extends State<CartItem> {
-  int quantity = 1;
-
+  
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -31,7 +36,7 @@ class _CartItemState extends State<CartItem> {
               width: 90,
               height: 90,
               child: Image.network(
-                'https://www.pngarts.com/files/4/Women-Bag-PNG-Photo.png',
+              widget.item.productCoverUrl,
                 fit: BoxFit.cover,
               ),
             ),
@@ -44,7 +49,7 @@ class _CartItemState extends State<CartItem> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Signature Tote",
+                  widget.item.productName,
                   style: textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: AppColors.black,
@@ -54,7 +59,7 @@ class _CartItemState extends State<CartItem> {
                 const SizedBox(height: 4),
 
                 Text(
-                  "Charcoal / Large",
+                  "stock:${widget.item.productStock}",
                   style: textTheme.bodySmall?.copyWith(
                     color: AppColors.darkGray,
                   ),
@@ -76,11 +81,9 @@ class _CartItemState extends State<CartItem> {
                           padding: EdgeInsets.zero,
                           iconSize: 18,
                           onPressed: () {
-                            if (quantity > 1) {
-                              setState(() {
-                                quantity--;
-                              });
-                            }
+                            context.read<CartCubit>().decrement(
+                            cartItemId: widget.item.itemId,
+                             quantity: 1.toString());
                           },
                           icon:
                           SvgPicture.asset("assets/icons/delete.svg"),
@@ -88,7 +91,7 @@ class _CartItemState extends State<CartItem> {
                       ),
 
                       Text(
-                        quantity.toString(),
+                        widget.item.quantity.toString(),
                         style: textTheme.bodyMedium,
                       ),
 
@@ -97,9 +100,8 @@ class _CartItemState extends State<CartItem> {
                           padding: EdgeInsets.zero,
                           iconSize: 18,
                           onPressed: () {
-                            setState(() {
-                              quantity++;
-                            });
+                            context.read<CartCubit>().addToCart(productId: widget.item.productId,
+                             quantity: 1);
                           },
                           icon: const Icon(Icons.add),
                         ),
@@ -119,7 +121,10 @@ class _CartItemState extends State<CartItem> {
               IconButton(
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
-                onPressed: () {},
+                onPressed: () {
+                  context.read<CartCubit>().deleteCartItem(
+                  cartItemId: widget.item.itemId);
+                },
                 icon: const Icon(
                   Icons.delete_outline,
                   color: Colors.grey,
@@ -130,7 +135,7 @@ class _CartItemState extends State<CartItem> {
               const SizedBox(height: 40),
 
               Text(
-                "\$450.00",
+                "\$${widget.item.totalPrice}",
                 style: textTheme.titleMedium?.copyWith(
                   color: AppColors.primary,
                   fontWeight: FontWeight.bold,

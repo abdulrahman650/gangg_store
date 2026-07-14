@@ -1,6 +1,5 @@
 class EndPoints {
-  static const String baseUrl =
-      'https://accessories-eshop.runasp.net/api/';
+  static const String baseUrl = 'https://accessories-eshop.runasp.net/api/';
 
   // Auth
   static const String login = 'auth/login';
@@ -26,3 +25,20 @@ class EndPoints {
   // Offers
   static const String offers = 'offers';
 }
+  //reviews
+  static const String getReview = 'reviews/{productId}';
+  static const String postReview = 'reviews/{productId}​';
+}
+
+  //cart
+  static const String getCart ='cart';
+  static const String addToCart='cart/items';
+  static const String decrementCartItem ='cart/items/decrement';
+  static const String applyCoupon ='cart/apply-coupon';
+  
+  static String deleteCartItem(String id)=>'cart/items/$id';
+  static String updateCartItem(String id)=>'cart/items/$id';
+
+}
+
+

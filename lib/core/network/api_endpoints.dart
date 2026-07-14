@@ -14,4 +14,17 @@ class EndPoints {
   static const String forgotPassword = 'auth/forgot-password';
   static const String resetPassword = 'auth/reset-password';
   static const String changePassword = 'auth/change-password';
+
+
+  //cart
+  static const String getCart ='cart';
+  static const String addToCart='cart/items';
+  static const String decrementCartItem ='cart/items/decrement';
+  static const String applyCoupon ='cart/apply-coupon';
+  
+  static String deleteCartItem(String id)=>'cart/items/$id';
+  static String updateCartItem(String id)=>'cart/items/$id';
+
 }
+
+

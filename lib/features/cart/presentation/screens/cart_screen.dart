@@ -95,38 +95,32 @@ class _CartScreenState extends State<CartScreen> {
 
 
                   if (cart.cartItems.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-
-                      Icon(
-                        Icons.shopping_cart_outlined,
-                        size: 90,
-                        color: Colors.grey,
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.card_travel,
+                            size: 64,
+                            color: AppColors.darkGray,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No Product yet',
+                            style: textTheme.titleLarge?.copyWith(
+                              color: AppColors.darkGray,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Add products to your Cart',
+                            style: textTheme.bodyMedium?.copyWith(
+                              color: AppColors.darkGray,
+                            ),
+                          ),
+                        ],
                       ),
-
-                      SizedBox(height: 20),
-
-                      Text(
-                        "Your cart is empty",
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-
-                      SizedBox(height: 10),
-
-                      Text(
-                        "Add some products first",
-                        style: TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                    );
               }
 
               double subtotal = 0;

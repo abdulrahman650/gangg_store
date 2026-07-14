@@ -24,7 +24,7 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
   @override
   Future<ReviewModel> addReview(AddReviewRequest request) async {
     final response = await api.post(
-      '${EndPoints.postReview}/${request.productId}',
+      EndPoints.postReview(request.productId),
       data: request.toJson(),
     );
 
@@ -38,8 +38,11 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
     required int pageSize,
   }) async {
     final response = await api.get(
-      '${EndPoints.getReview}/$productId',
-      queryParameters: {"page": page, "pageSize": pageSize},
+      EndPoints.getReview(productId),
+      queryParameters: {
+        "page": page,
+        "pageSize": pageSize,
+      },
     );
 
     return ReviewsResponseModel.fromJson(response);

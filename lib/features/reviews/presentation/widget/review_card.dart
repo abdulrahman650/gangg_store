@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gangg_store/core/theme/app_colors.dart';
 
 class WriteReviewCard extends StatefulWidget {
   final Function(double rating, String comment) onSubmit;
@@ -76,7 +77,7 @@ class _WriteReviewCardState extends State<WriteReviewCard> {
               onPressed: () {
                 widget.onSubmit(rating, _controller.text.trim());
               },
-              child: const Text("Submit Review"),
+              child: const Text("Submit Review",style: TextStyle(color: AppColors.white),),
             ),
           ),
         ],

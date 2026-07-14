@@ -10,7 +10,7 @@ import 'package:gangg_store/features/favourites/presentation/cubit/wishlist_cubi
 import '../../../../core/utils/guest_guard.dart';
 import '../../../favourites/presentation/cubit/wishlist_state.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductCard extends StatefulWidget {
   final ProductModel product;
 
   const ProductCard({
@@ -19,8 +19,13 @@ class ProductCard extends StatelessWidget {
   });
 
   @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  @override
   Widget build(BuildContext context) {
-    final hasDiscount = product.discountPercentage > 0;
+    final hasDiscount = widget.product.discountPercentage > 0;
 
     return InkWell(
       onTap: () {
@@ -30,7 +35,7 @@ class ProductCard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => ProductDetailScreen(productId: product.id),
+                builder: (_) => ProductDetailScreen(productId: widget.product.id),
               ),
             );
           },
@@ -47,47 +52,49 @@ class ProductCard extends StatelessWidget {
             Expanded(
               child: Stack(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.gray,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(16),
-                      ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(16),
-                      ),
-                      child: Image.network(
-                        product.coverPictureUrl,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity,
-                        alignment: Alignment.center,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Container(
-                            color: AppColors.gray,
-                            child: const Center(
-                              child: CircularProgressIndicator(
-                                color: AppColors.primary,
-                              ),
-                            ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: AppColors.gray,
-                            child: const Icon(
-                              Icons.image_not_supported,
-                              color: AppColors.darkGray,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
+                  ///Image
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     color: AppColors.gray,
+                  //     borderRadius: const BorderRadius.vertical(
+                  //       top: Radius.circular(16),
+                  //     ),
+                  //   ),
+                  //   child: ClipRRect(
+                  //     borderRadius: const BorderRadius.vertical(
+                  //       top: Radius.circular(16),
+                  //     ),
+                  //     child: Image.network(
+                  //       product.coverPictureUrl,
+                  //       fit: BoxFit.cover,
+                  //       width: double.infinity,
+                  //       height: double.infinity,
+                  //       alignment: Alignment.center,
+                  //       loadingBuilder: (context, child, loadingProgress) {
+                  //         if (loadingProgress == null) return child;
+                  //         return Container(
+                  //           color: AppColors.gray,
+                  //           child: const Center(
+                  //             child: CircularProgressIndicator(
+                  //               color: AppColors.primary,
+                  //             ),
+                  //           ),
+                  //         );
+                  //       },
+                  //       errorBuilder: (context, error, stackTrace) {
+                  //         return Container(
+                  //           color: AppColors.gray,
+                  //           child: const Icon(
+                  //             Icons.image_not_supported,
+                  //             color: AppColors.darkGray,
+                  //           ),
+                  //         );
+                  //       },
+                  //     ),
+                  //   ),
+                  // ),
                   // Discount Badge
+                  _ProductImage(imageUrl: widget.product.imageUrl),
                   if (hasDiscount)
                     Positioned(
                       top: 8,
@@ -102,7 +109,7 @@ class ProductCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          '-${product.discountPercentage.toInt()}%',
+                          '-${widget.product.discountPercentage.toInt()}%',
                           style: const TextStyle(
                             color: AppColors.white,
                             fontSize: 10,
@@ -121,13 +128,13 @@ class ProductCard extends StatelessWidget {
                         GuestGuard.run(
                           context,
                           onAuthenticated: () {
-                            getIt<WishlistCubit>().toggleFavorite(product);
+                            getIt<WishlistCubit>().toggleFavorite(widget.product);
                           },
                         );
                       },
                       child: BlocBuilder<WishlistCubit, WishlistState>(
                         builder: (context, state) {
-                          final isFavorite = getIt<WishlistCubit>().isFavorite(product.id);
+                          final isFavorite = getIt<WishlistCubit>().isFavorite(widget.product.id);
                           return Container(
                             padding: const EdgeInsets.all(6),
                             decoration: const BoxDecoration(
@@ -153,7 +160,7 @@ class ProductCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.name,
+                    widget.product.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -166,15 +173,15 @@ class ProductCard extends StatelessWidget {
                     children: [
                       const Icon(Icons.star, color: Colors.amber, size: 12),
                       Text(
-                        ' ${product.rating > 0 ? product.rating.toStringAsFixed(1) : 'New'}',
+                        ' ${widget.product.rating > 0 ? widget.product.rating.toStringAsFixed(1) : 'New'}',
                         style: const TextStyle(
                           fontSize: 11,
                           color: AppColors.black,
                         ),
                       ),
-                      if (product.reviewsCount > 0)
+                      if (widget.product.reviewsCount > 0)
                         Text(
-                          ' (${product.reviewsCount})',
+                          ' (${widget.product.reviewsCount})',
                           style: const TextStyle(
                             fontSize: 10,
                             color: AppColors.darkGray,
@@ -186,7 +193,7 @@ class ProductCard extends StatelessWidget {
                   // Price
                   if (hasDiscount) ...[
                     Text(
-                      product.formattedPrice,
+                      widget.product.formattedPrice,
                       style: TextStyle(
                         fontSize: 11,
                         color: AppColors.darkGray.withAlpha(160),
@@ -194,7 +201,7 @@ class ProductCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      product.formattedDiscountedPrice,
+                      widget.product.formattedDiscountedPrice,
                       style: const TextStyle(
                         color: AppColors.primary,
                         fontWeight: FontWeight.bold,
@@ -203,7 +210,7 @@ class ProductCard extends StatelessWidget {
                     ),
                   ] else
                     Text(
-                      product.formattedPrice,
+                      widget.product.formattedPrice,
                       style: const TextStyle(
                         color: AppColors.primary,
                         fontWeight: FontWeight.bold,
@@ -260,7 +267,7 @@ class ProductCard extends StatelessWidget {
               Navigator.of(context, rootNavigator: true).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('${product.name} added to cart'),
+                  content: Text('${widget.product.name} added to cart'),
                   duration: const Duration(seconds: 2),
                 ),
               );
@@ -284,8 +291,61 @@ class ProductCard extends StatelessWidget {
     );
 
     context.read<CartCubit>().addToCart(
-      productId: product.id,
+      productId: widget.product.id,
       quantity: 1,
+    );
+  }
+}
+
+
+
+class _ProductImage extends StatefulWidget {
+  final String imageUrl;
+  const _ProductImage({required this.imageUrl});
+  @override
+  State<_ProductImage> createState() => _ProductImageState();
+}
+
+class _ProductImageState extends State<_ProductImage> {
+  bool _hasError = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final url = _hasError ? ProductModel.fallbackImageUrl : widget.imageUrl;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.gray,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+        child: Image.network(
+          url,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+          errorBuilder: (context, error, stackTrace) {
+            if (!_hasError) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) setState(() => _hasError = true);
+              });
+              return Container(color: AppColors.gray);
+            }
+            return Container(
+              color: AppColors.gray,
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.image_not_supported, color: AppColors.darkGray, size: 40),
+                  SizedBox(height: 4),
+                  Text('No Image', style: TextStyle(color: AppColors.darkGray, fontSize: 10)),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

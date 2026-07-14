@@ -9,9 +9,14 @@ import 'package:gangg_store/features/favourites/presentation/cubit/wishlist_stat
 import '../cubit/product_details_cubit.dart';
 import '../cubit/product_details_state.dart';
 
-class BottomNavigation extends StatelessWidget {
+class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});
 
+  @override
+  State<BottomNavigation> createState() => _BottomNavigationState();
+}
+
+class _BottomNavigationState extends State<BottomNavigation> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -23,7 +28,7 @@ class BottomNavigation extends StatelessWidget {
               builder: (context, state) {
                 final product = state is ProductDetailsLoaded ? state.product : null;
                 if (product == null) return const SizedBox.shrink();
-                
+
                 final isFavorite = getIt<WishlistCubit>().isFavorite(product.id);
                 return InkWell(
                   onTap: () {
@@ -34,6 +39,7 @@ class BottomNavigation extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
+                      color: AppColors.lightGray,
                       border: Border.all(color: AppColors.gray),
                       borderRadius: BorderRadius.circular(16),
                     ),

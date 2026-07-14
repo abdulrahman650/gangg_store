@@ -13,6 +13,10 @@ import 'package:gangg_store/features/prodeuct_details/presentation/cubit/product
 import 'package:gangg_store/features/prodeuct_details/presentation/widgets/bottom_navigation.dart';
 import 'package:gangg_store/features/prodeuct_details/presentation/widgets/quantity_and_price.dart';
 import 'package:gangg_store/features/search/presentation/screens/search_screen.dart';
+import 'package:gangg_store/features/prodeuct_details/presentation/widgets/product_reviews_section.dart';
+
+import '../../../reviews/presentation/cubit/review_cubit.dart';
+import '../../../reviews/presentation/cubit/review_state.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   final String? productId;
@@ -40,8 +44,14 @@ class ProductDetailScreen extends StatelessWidget {
               return cubit;
             },
           ),
+
           BlocProvider(
-            create: (context) => getIt<CartCubit>(),
+            create: (_) => getIt<ReviewCubit>()
+              ..getReviews(productId: product!.id),
+          ),
+
+          BlocProvider(
+            create: (_) => getIt<CartCubit>(),
           ),
         ],
         child: BlocListener<CartCubit, CartState>(
@@ -73,11 +83,17 @@ class ProductDetailScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => getIt<ProductDetailsCubit>()
-            ..fetchProductDetails(productId!),
+          create: (context) =>
+          getIt<ProductDetailsCubit>()..fetchProductDetails(productId!),
         ),
+
         BlocProvider(
-          create: (context) => getIt<CartCubit>(),
+          create: (_) => getIt<ReviewCubit>()
+            ..getReviews(productId: productId!),
+        ),
+
+        BlocProvider(
+          create: (_) => getIt<CartCubit>(),
         ),
       ],
       child: BlocListener<CartCubit, CartState>(
@@ -137,7 +153,10 @@ class ProductDetailScreen extends StatelessWidget {
             }
 
             if (state is ProductDetailsLoaded) {
-              return _ProductDetailsView(product: state.product);
+              return _ProductDetailsView(
+                product: state.product,
+                state: state,
+              );
             }
 
             return const Scaffold(
@@ -154,8 +173,13 @@ class ProductDetailScreen extends StatelessWidget {
 
 class _ProductDetailsView extends StatelessWidget {
   final ProductModel product;
+  final ProductDetailsLoaded? state;
 
-  const _ProductDetailsView({required this.product});
+  const _ProductDetailsView({
+    super.key,
+    required this.product,
+    this.state,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -208,97 +232,103 @@ class _ProductDetailsView extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          // Product Image Carousel
-          SizedBox(
+          // Product Image
+          Container(
+            width: double.infinity,
             height: 320,
-            child: ListView.builder(
-              primary: false,
-              scrollDirection: Axis.horizontal,
-              itemCount: product.productPictures.isNotEmpty
-                  ? product.productPictures.length
-                  : 1,
-              itemBuilder: (BuildContext context, int index) {
-                final imageUrl = product.productPictures.isNotEmpty
-                    ? product.productPictures[index]
-                    : product.coverPictureUrl;
-                return Container(
-                  margin: const EdgeInsets.only(right: 16),
-                  width: 280,
-                  decoration: BoxDecoration(
+            decoration: BoxDecoration(
+              color: AppColors.gray,
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: Image.network(
+                product.coverPictureUrl,
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+
+                  return Container(
                     color: AppColors.gray,
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(24),
-                    child: Image.network(
-                      imageUrl,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
-                      alignment: Alignment.center,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Container(
-                          color: AppColors.gray,
-                          child: const Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: AppColors.gray,
-                          child: const Icon(
-                            Icons.image_not_supported,
-                            color: AppColors.darkGray,
-                          ),
-                        );
-                      },
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.primary,
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: AppColors.gray,
+                    child: const Center(
+                      child: Icon(
+                        Icons.image_not_supported,
+                        size: 60,
+                        color: AppColors.darkGray,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
+          // // Product Image Carousel
+          // SizedBox(
+          //   height: 320,
+          //   child: ListView.builder(
+          //     primary: false,
+          //     scrollDirection: Axis.horizontal,
+          //     itemCount: product.productPictures.isNotEmpty
+          //         ? product.productPictures.length
+          //         : 1,
+          //     itemBuilder: (BuildContext context, int index) {
+          //       final imageUrl = product.productPictures.isNotEmpty
+          //           ? product.productPictures[index]
+          //           : product.coverPictureUrl;
+          //       return Container(
+          //         margin: const EdgeInsets.only(right: 16),
+          //         width: double.infinity,
+          //         decoration: BoxDecoration(
+          //           color: AppColors.gray,
+          //           borderRadius: BorderRadius.circular(24),
+          //         ),
+          //         child: ClipRRect(
+          //           borderRadius: BorderRadius.circular(24),
+          //           child: Image.network(
+          //             imageUrl,
+          //             fit: BoxFit.cover,
+          //             width: double.infinity,
+          //             height: double.infinity,
+          //             alignment: Alignment.center,
+          //             loadingBuilder: (context, child, loadingProgress) {
+          //               if (loadingProgress == null) return child;
+          //               return Container(
+          //                 color: AppColors.gray,
+          //                 child: const Center(
+          //                   child: CircularProgressIndicator(
+          //                     color: AppColors.primary,
+          //                   ),
+          //                 ),
+          //               );
+          //             },
+          //             errorBuilder: (context, error, stackTrace) {
+          //               return Container(
+          //                 color: AppColors.gray,
+          //                 child: const Icon(
+          //                   Icons.image_not_supported,
+          //                   color: AppColors.darkGray,
+          //                 ),
+          //               );
+          //             },
+          //           ),
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // ),
           const SizedBox(height: 12),
-
-          // Page Indicator
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 16,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(width: 4),
-              Container(
-                width: 4,
-                height: 4,
-                decoration: const BoxDecoration(
-                  color: AppColors.gray,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              const SizedBox(width: 4),
-              Container(
-                width: 4,
-                height: 4,
-                decoration: const BoxDecoration(
-                  color: AppColors.gray,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 15),
-
-          // Category & Rating
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -442,7 +472,32 @@ class _ProductDetailsView extends StatelessWidget {
 
           const QuantityAndPrice(),
           const SizedBox(height: 25),
+          ///reviews
+          BlocBuilder<ReviewCubit, ReviewState>(
+            builder: (context, reviewState) {
+              if (reviewState is ReviewLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
 
+              if (reviewState is ReviewSuccess) {
+                return ProductReviewsSection(
+                  product: product,
+              reviews: reviewState.reviews,
+                );
+              }
+
+              if (reviewState is ReviewError) {
+                return Center(
+                  child: Text(reviewState.message),
+                );
+              }
+
+              return const SizedBox();
+            },
+          ),
+          const SizedBox(height: 25),
           // Similar Products
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -470,23 +525,31 @@ class _ProductDetailsView extends StatelessWidget {
           const SizedBox(height: 15),
 
           // Similar Products List
-          SizedBox(
-            height: 280,
-            child: ListView.builder(
-              primary: false,
-              scrollDirection: Axis.horizontal,
-              itemCount: 3,
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: 180,
-                    child: ProductCard(product: product),
-                  ),
-                );
-              },
+          if (state != null)
+            state!.similarProducts.isEmpty
+                ? const Center(
+              child: Text("No similar products"),
+            )
+                : SizedBox(
+              height: 280,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: state!.similarProducts.length,
+                itemBuilder: (context, index) {
+                  final similarProduct = state!.similarProducts[index];
+
+                  return Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: SizedBox(
+                      width: 180,
+                      child: ProductCard(
+                        product: similarProduct,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
           const SizedBox(height: 20),
         ],
       ),

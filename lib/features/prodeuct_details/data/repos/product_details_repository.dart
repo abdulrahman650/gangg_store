@@ -6,6 +6,8 @@ import '../../../../core/network/api_endpoints.dart';
 
 abstract class ProductDetailsRepository {
   Future<ProductModel> getProductDetails(String id);
+
+  Future<List<ProductModel>> getProducts();
 }
 
 class ProductDetailsRepositoryImpl implements ProductDetailsRepository {
@@ -18,6 +20,19 @@ class ProductDetailsRepositoryImpl implements ProductDetailsRepository {
     try {
       final response = await apiConsumer.get(EndPoints.productById(id));
       return ProductModel.fromJson(response);
+    } on RemoteException {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<ProductModel>> getProducts() async {
+    try {
+      final response = await apiConsumer.get(EndPoints.products);
+
+      return (response['items'] as List)
+          .map((e) => ProductModel.fromJson(e))
+          .toList();
     } on RemoteException {
       rethrow;
     }

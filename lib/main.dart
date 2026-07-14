@@ -11,6 +11,7 @@ import 'features/cart/presentation/cubit/cart_cubit.dart';
 import 'features/home/presentation/cubit/home_cubit.dart';
 import 'features/layout/presentation/screens/layout_screen.dart';
 import 'features/profile/presentation/cubit/profile_cubit.dart';
+import 'features/reviews/presentation/cubit/review_cubit.dart';
 import 'features/reviews/presentation/screens/reviews_screen.dart';
 import 'features/favourites/presentation/cubit/wishlist_cubit.dart';
 

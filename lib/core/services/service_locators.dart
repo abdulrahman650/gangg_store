@@ -88,6 +88,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<ProductDetailsCubit>(
         () => ProductDetailsCubit(
       getIt<ProductDetailsRepository>(),
+      getIt<ReviewRepository>(),
     ),
   );
 

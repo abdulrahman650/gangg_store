@@ -17,6 +17,13 @@ class ProductModel {
   final String sellerId;
   final List<String> categories; // <-- غيرت من nullable لـ non-nullable
 
+
+  // Fallback values
+  static const String fallbackImageUrl =
+      'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600';
+  static const String fallbackName = 'Luxury Product';
+  static const double fallbackPrice = 0.0;
+
   ProductModel({
     required this.id,
     required this.productCode,
@@ -39,58 +46,65 @@ class ProductModel {
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
-      id: json['id'] as String,
-      productCode: json['productCode'] as String,
-      name: json['name'] as String,
+      id: json['id'] as String? ?? '',
+      productCode: json['productCode'] as String? ?? '',
+      name: json['name'] as String? ?? '',
       description: json['description'] as String?,
       arabicName: json['arabicName'] as String? ?? json['nameArabic'] as String?,
       arabicDescription: json['arabicDescription'] as String? ?? json['descriptionArabic'] as String?,
-      coverPictureUrl: json['coverPictureUrl'] as String,
+      coverPictureUrl: json['coverPictureUrl'] as String? ?? fallbackImageUrl,
       productPictures: (json['productPictures'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
+          ?.map((e) => e as String)
+          .toList() ??
           [],
-      price: (json['price'] as num).toDouble(),
-      stock: json['stock'] as int,
-      weight: (json['weight'] as num).toDouble(),
-      color: json['color'] as String,
-      rating: (json['rating'] as num).toDouble(),
-      reviewsCount: json['reviewsCount'] as int,
-      discountPercentage: (json['discountPercentage'] as num).toDouble(),
-      sellerId: json['sellerId'] as String,
+      price: (json['price'] as num?)?.toDouble() ?? fallbackPrice,
+      stock: json['stock'] as int? ?? 0,
+      weight: (json['weight'] as num?)?.toDouble() ?? 0.0,
+      color: json['color'] as String? ?? 'Unknown',
+      rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
+      reviewsCount: json['reviewsCount'] as int? ?? 0,
+      discountPercentage: (json['discountPercentage'] as num?)?.toDouble() ?? 0.0,
+      sellerId: json['sellerId'] as String? ?? '',
       categories: (json['categories'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
+          ?.map((e) => e as String)
+          .toList() ??
           [],
     );
   }
+  /// Safe display name - validates bad names
+  String get displayName {
+    final trimmed = name.trim();
+    // Reject short/bad names
+    if (trimmed.length < 3 ||
+        trimmed == 's' ||
+        trimmed == 'd' ||
+        trimmed.toLowerCase() == 'test' ||
+        trimmed.toLowerCase() == 'new' ||
+        RegExp(r'^[a-z]$').hasMatch(trimmed)) {
+      return fallbackName;
+    }
+    return trimmed;
+  }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'productCode': productCode,
-      'name': name,
-      'description': description,
-      'arabicName': arabicName,
-      'arabicDescription': arabicDescription,
-      'coverPictureUrl': coverPictureUrl,
-      'productPictures': productPictures,
-      'price': price,
-      'stock': stock,
-      'weight': weight,
-      'color': color,
-      'rating': rating,
-      'reviewsCount': reviewsCount,
-      'discountPercentage': discountPercentage,
-      'sellerId': sellerId,
-      'categories': categories,
-    };
+  /// Safe price display
+  String get displayPrice {
+    if (price <= 0 || price.isNaN) return '\$0.00';
+    return '\$${price.toStringAsFixed(2)}';
+  }
+
+  /// Safe discounted price display
+  String get displayDiscountedPrice {
+    if (price <= 0 || discountPercentage <= 0) return displayPrice;
+    final discounted = price * (1 - discountPercentage / 100);
+    return '\$${discounted.toStringAsFixed(2)}';
   }
 
   double get discountedPrice {
+    if (price <= 0) return 0;
     return price * (1 - discountPercentage / 100);
   }
 
-  String get formattedPrice => '\$${price.toStringAsFixed(2)}';
-  String get formattedDiscountedPrice => '\$${discountedPrice.toStringAsFixed(2)}';
+  String get formattedPrice => displayPrice;
+  String get formattedDiscountedPrice => displayDiscountedPrice;
+  String get imageUrl => coverPictureUrl.isNotEmpty ? coverPictureUrl : fallbackImageUrl;
 }

@@ -1,95 +1,75 @@
-
 import 'package:flutter/material.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
+import 'package:gangg_store/features/home/data/model/offer_model.dart';
 
 class DiscountCard extends StatelessWidget {
-  const DiscountCard({
-    super.key,
-  });
+  final List<OfferModel> offers;
+
+  const DiscountCard({super.key, required this.offers});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 200,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        image: const DecorationImage(
-          image: NetworkImage(
-            'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=600',
-          ),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          // gradient: LinearGradient(
-          //   colors: [
-          //     AppColors.black.withAlpha(128),
-          //     AppColors.white.withAlpha(0),
-          //   ],
-          //   begin: Alignment.centerLeft,
-          //   end: Alignment.centerRight,
-          // ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'SEASONAL SALE',
-              style: TextStyle(
-                color: AppColors.white,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
+    if (offers.isEmpty) return const SizedBox.shrink();
+
+    return SizedBox(
+      height: 160,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: offers.length,
+        itemBuilder: (context, index) {
+          final offer = offers[index];
+          return Container(
+            width: 300,
+            margin: const EdgeInsets.only(right: 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              image: DecorationImage(
+                image: NetworkImage(offer.coverUrl),
+                fit: BoxFit.cover,
+                onError: (exception, stackTrace) {},
               ),
             ),
-            const SizedBox(height: 4),
-            const Text(
-              '50% Off',
-              style: TextStyle(
-                color: AppColors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.white,
-                foregroundColor: AppColors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                gradient: LinearGradient(
+                  begin: Alignment.bottomLeft,
+                  end: Alignment.topRight,
+                  colors: [
+                    Colors.black.withOpacity(0.7),
+                    Colors.transparent,
+                  ],
                 ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 4,
-                ),
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    'Shop Now',
-                    style: TextStyle(
-                      fontSize: 12,
+                    offer.name,
+                    style: const TextStyle(
+                      color: AppColors.white,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Icon(Icons.arrow_right_alt, size: 16),
+                  const SizedBox(height: 4),
+                  Text(
+                    offer.description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: AppColors.white.withOpacity(0.8),
+                      fontSize: 12,
+                    ),
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 }
-
-

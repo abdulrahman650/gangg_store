@@ -1,6 +1,5 @@
 class EndPoints {
-  static const String baseUrl =
-      'https://accessories-eshop.runasp.net/api/';
+  static const String baseUrl = 'https://accessories-eshop.runasp.net/api/';
 
   // Auth
   static const String login = 'auth/login';
@@ -15,6 +14,10 @@ class EndPoints {
   static const String resetPassword = 'auth/reset-password';
   static const String changePassword = 'auth/change-password';
 
+  //reviews
+  static const String getReview = 'reviews/{productId}';
+  static const String postReview = 'reviews/{productId}​';
+}
 
   //cart
   static const String getCart ='cart';

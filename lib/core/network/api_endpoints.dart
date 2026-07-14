@@ -14,6 +14,17 @@ class EndPoints {
   static const String resetPassword = 'auth/reset-password';
   static const String changePassword = 'auth/change-password';
 
+  // Products
+  static const String products = 'products';
+  static String productById(String id) => 'products/$id';
+
+  // Categories
+  static const String categories = 'categories';
+  static String categoryById(String id) => 'categories/$id';
+
+  // Offers
+  static const String offers = 'offers';
+}
   //reviews
   static const String getReview = 'reviews/{productId}';
   static const String postReview = 'reviews/{productId}​';

@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import '../errors/exceptions.dart';
 import 'api_consumer.dart';
 import 'api_endpoints.dart';
-import 'interceptor.dart';
+import 'auth_interceptor.dart';
 
 class DioConsumer implements ApiConsumer {
   final Dio dio;
@@ -15,17 +15,24 @@ class DioConsumer implements ApiConsumer {
       receiveTimeout: const Duration(seconds: 30),
       sendTimeout: const Duration(seconds: 30),
       headers: {
-        'Content-Type': 'application/json',
         'Accept': 'application/json',
+        // شيلت Content-Type من هنا عشان GET requests
       },
+      validateStatus: (status) => true,
     );
+    
     dio.interceptors.add(
       AuthInterceptor(),
     );
   }
 
-///Exception
   RemoteException _handleDioException(DioException e) {
+    if (e.response != null) {
+      print('ERROR STATUS: ${e.response?.statusCode}');
+      print('ERROR DATA: ${e.response?.data}');
+      print('ERROR HEADERS: ${e.response?.headers}');
+    }
+
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
         return const RemoteException('Connection timeout');
@@ -42,8 +49,9 @@ class DioConsumer implements ApiConsumer {
       default:
         if (e.response != null &&
             e.response!.data is Map<String, dynamic>) {
+          final data = e.response!.data as Map<String, dynamic>;
           return RemoteException(
-            e.response!.data['message'] ?? 'Something went wrong',
+            data['message'] ?? data['title'] ?? 'Something went wrong',
           );
         }
 
@@ -51,7 +59,6 @@ class DioConsumer implements ApiConsumer {
     }
   }
 
-///get
   @override
   Future<dynamic> get(
       String path, {
@@ -62,8 +69,22 @@ class DioConsumer implements ApiConsumer {
       final response = await dio.get(
         path,
         queryParameters: queryParameters,
-        options: Options(headers: headers),
+        options: Options(
+          headers: {
+            ...?headers,
+            // GET requests: Accept بس، مش Content-Type
+            'Accept': 'application/json',
+          },
+        ),
       );
+
+      if (response.statusCode != null && response.statusCode! >= 400) {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+        );
+      }
 
       return response.data;
     } on DioException catch (e) {
@@ -71,7 +92,6 @@ class DioConsumer implements ApiConsumer {
     }
   }
 
-///post
   @override
   Future<dynamic> post(
       String path, {
@@ -84,8 +104,22 @@ class DioConsumer implements ApiConsumer {
         path,
         data: data,
         queryParameters: queryParameters,
-        options: Options(headers: headers),
+        options: Options(
+          headers: {
+            ...?headers,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
       );
+
+      if (response.statusCode != null && response.statusCode! >= 400) {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+        );
+      }
 
       return response.data;
     } on DioException catch (e) {
@@ -93,7 +127,6 @@ class DioConsumer implements ApiConsumer {
     }
   }
 
-///put
   @override
   Future<dynamic> put(
       String path, {
@@ -106,8 +139,22 @@ class DioConsumer implements ApiConsumer {
         path,
         data: data,
         queryParameters: queryParameters,
-        options: Options(headers: headers),
+        options: Options(
+          headers: {
+            ...?headers,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
       );
+
+      if (response.statusCode != null && response.statusCode! >= 400) {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+        );
+      }
 
       return response.data;
     } on DioException catch (e) {
@@ -115,7 +162,6 @@ class DioConsumer implements ApiConsumer {
     }
   }
 
-///patch
   @override
   Future<dynamic> patch(
       String path, {
@@ -128,8 +174,22 @@ class DioConsumer implements ApiConsumer {
         path,
         data: data,
         queryParameters: queryParameters,
-        options: Options(headers: headers),
+        options: Options(
+          headers: {
+            ...?headers,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
       );
+
+      if (response.statusCode != null && response.statusCode! >= 400) {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+        );
+      }
 
       return response.data;
     } on DioException catch (e) {
@@ -137,7 +197,6 @@ class DioConsumer implements ApiConsumer {
     }
   }
 
-///delete
   @override
   Future<dynamic> delete(
       String path, {
@@ -150,8 +209,22 @@ class DioConsumer implements ApiConsumer {
         path,
         data: data,
         queryParameters: queryParameters,
-        options: Options(headers: headers),
+        options: Options(
+          headers: {
+            ...?headers,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
       );
+
+      if (response.statusCode != null && response.statusCode! >= 400) {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+        );
+      }
 
       return response.data;
     } on DioException catch (e) {

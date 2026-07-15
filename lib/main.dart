@@ -49,7 +49,11 @@ class MyApp extends StatelessWidget {
         ),
 
         BlocProvider<CartCubit>(
-          create: (_) => getIt<CartCubit>(),
+          create: (_) {
+            print("CartCubit Created");
+
+            return getIt<CartCubit>();
+          },
         ),
 
         BlocProvider<WishlistCubit>(

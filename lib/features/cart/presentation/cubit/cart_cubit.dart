@@ -1,3 +1,4 @@
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gangg_store/features/cart/data/model/get_cart_model.dart';
 import 'package:gangg_store/features/cart/data/repos/cart_repositry.dart';
@@ -15,14 +16,13 @@ class CartCubit extends Cubit<CartState> {
     required this.repositry,
   }) : super(const CartInitial());
 
+  GetCartModel? get cart => _cart;
+
   Future<void> getCart() async {
     emit(const CartLoading());
 
     try {
-      final response = await repositry.getCart();
-
-      _cart = response;
-
+      _cart = await repositry.getCart();
       emit(GetCartSuccess(_cart!));
     } catch (e) {
       emit(GetCartFailure(e.toString()));
@@ -33,9 +33,9 @@ class CartCubit extends Cubit<CartState> {
     required String productId,
     required int quantity,
   }) async {
-    emit(const CartLoading());
-
     try {
+      emit(const AddToCartLoading());
+
       await repositry.addToCart(
         AddToCartRequest(
           productId: productId,
@@ -43,11 +43,36 @@ class CartCubit extends Cubit<CartState> {
         ),
       );
 
-      await getCart();
+      _cart = await repositry.getCart();
 
-      emit(const AddToCartSuccess());
+      emit(CartActionSuccess(_cart!));
     } catch (e) {
-      emit(GetCartFailure(e.toString()));
+      emit(CartActionFailure(e.toString()));
+    }
+  }
+
+  Future<void> updateQuantity({
+    required String cartItemId,
+    required int quantity,
+  }) async {
+    if (_cart == null) return;
+
+    emit(CartActionLoading(cartItemId));
+
+    try {
+      await repositry.updateCartItem(
+        UpdateCartRequest(
+          id: cartItemId,
+          quantity: quantity,
+        ),
+      );
+
+      _cart = await repositry.getCart();
+
+      emit(CartActionSuccess(_cart!));
+    } catch (e) {
+      emit(CartActionFailure(e.toString()));
+      emit(GetCartSuccess(_cart!));
     }
   }
 
@@ -55,7 +80,9 @@ class CartCubit extends Cubit<CartState> {
     required String cartItemId,
     required String quantity,
   }) async {
-    emit(const CartLoading());
+    if (_cart == null) return;
+
+    emit(CartActionLoading(cartItemId));
 
     try {
       await repositry.decrement(
@@ -65,59 +92,38 @@ class CartCubit extends Cubit<CartState> {
         ),
       );
 
-      await getCart();
+      _cart = await repositry.getCart();
 
-      emit(const DecrementSuccess());
+      emit(CartActionSuccess(_cart!));
     } catch (e) {
-      emit(const DecrementFailure());
+      emit(CartActionFailure(e.toString()));
+      emit(GetCartSuccess(_cart!));
     }
   }
 
   Future<void> deleteCartItem({
     required String cartItemId,
   }) async {
-    emit(const CartLoading());
-
     try {
+      emit(CartActionLoading(cartItemId));
+
       await repositry.deleteCartItem(cartItemId);
 
-      await getCart();
+      if (_cart != null) {
+        _cart!.cartItems.removeWhere(
+              (e) => e.itemId == cartItemId,
+        );
 
-      emit(const DeleteSuccess());
+        emit(CartActionSuccess(_cart!));
+        emit(GetCartSuccess(_cart!));
+      }
+
+      try {
+        _cart = await repositry.getCart();
+        emit(GetCartSuccess(_cart!));
+      } catch (_) {}
     } catch (e) {
-      emit(const DeleteFailure());
-    }
-  }
-
-  Future<void> updateQuantity({
-    required String cartItemId,
-    required int quantity,
-  }) async {
-    try {
-      await repositry.updateCartItem(
-        UpdateCartRequest(
-          id: cartItemId,
-          quantity: quantity,
-        ),
-      );
-
-      if (_cart == null) return;
-
-      final index =
-      _cart!.cartItems.indexWhere((e) => e.itemId == cartItemId);
-
-      if (index == -1) return;
-
-      final oldItem = _cart!.cartItems[index];
-
-      _cart!.cartItems[index] = oldItem.copyWith(
-        quantity: quantity,
-        totalPrice: oldItem.finalPricePerUnit * quantity,
-      );
-
-      emit(GetCartSuccess(_cart!));
-    } catch (e) {
-      emit(UpdateQuantityFailure(e.toString()));
+      emit(CartActionFailure(e.toString()));
     }
   }
 }

@@ -50,9 +50,9 @@ class ProductDetailScreen extends StatelessWidget {
               ..getReviews(productId: product!.id),
           ),
 
-          BlocProvider(
-            create: (_) => getIt<CartCubit>(),
-          ),
+          // BlocProvider(
+          //   create: (_) => getIt<CartCubit>(),
+          // ),
         ],
         child: BlocListener<CartCubit, CartState>(
           listener: (context, state) {
@@ -92,9 +92,9 @@ class ProductDetailScreen extends StatelessWidget {
             ..getReviews(productId: productId!),
         ),
 
-        BlocProvider(
-          create: (_) => getIt<CartCubit>(),
-        ),
+        // BlocProvider(
+        //   create: (_) => getIt<CartCubit>(),
+        // ),
       ],
       child: BlocListener<CartCubit, CartState>(
         listener: (context, state) {

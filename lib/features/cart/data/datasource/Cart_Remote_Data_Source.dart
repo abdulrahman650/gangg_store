@@ -52,14 +52,18 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource{
     return CartModel.fromJson(response);
     
   }
-
   @override
-  Future<void> deleteCartItem({required String cartItemId})async {
-   
+  Future<void> deleteCartItem({
+    required String cartItemId,
+  }) async {
     await api.delete(
       EndPoints.deleteCartItem(cartItemId),
+      data: {
+        "id": cartItemId,
+      },
     );
   }
+
   
   @override
   Future<GetCartModel> getCart()async {

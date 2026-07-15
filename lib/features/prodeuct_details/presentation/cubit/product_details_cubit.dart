@@ -75,18 +75,18 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     }
   }
 
-  void addToCart() {
-    if (state is ProductDetailsLoaded) {
-      final current = state as ProductDetailsLoaded;
-
-      final cartCubit = getIt<CartCubit>();
-
-      cartCubit.addToCart(
-        productId: current.product.id,
-        quantity: current.quantity,
-      );
-    }
-  }
+  // void addToCart() {
+  //   if (state is ProductDetailsLoaded) {
+  //     final current = state as ProductDetailsLoaded;
+  //
+  //     final cartCubit = getIt<CartCubit>();
+  //
+  //     cartCubit.addToCart(
+  //       productId: current.product.id,
+  //       quantity: current.quantity,
+  //     );
+  //   }
+  // }
 
   Future<void> setProductDirectly(ProductModel product) async {
 

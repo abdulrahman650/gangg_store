@@ -17,17 +17,18 @@ class AuthInterceptor extends Interceptor {
     final token = CacheHelper.getData(CacheKeys.accessToken);
 
     final path = options.path;
+    log(options.path);
+    if (!options.path.contains('/auth/login') &&
+        !options.path.contains('/auth/register') &&
+        !options.path.contains('/auth/forgot-password') &&
+        !options.path.contains('/auth/reset-password') &&
+        !options.path.contains('/auth/validate-otp') &&
+        !options.path.contains('/auth/resend-otp') &&
+        !options.path.contains('/auth/verify-email') &&
+        !options.path.contains('/auth/refresh-token')) {
 
-    if (!path.endsWith('auth/login') &&
-        !path.endsWith('auth/register') &&
-        !path.endsWith('auth/forgot-password') &&
-        !path.endsWith('auth/reset-password') &&
-        !path.endsWith('auth/validate-otp') &&
-        !path.endsWith('auth/resend-otp') &&
-        !path.endsWith('auth/verify-email') &&
-        !path.endsWith('auth/refresh-token')) {
-      if (token != null && token.toString().isNotEmpty) {
-        options.headers['Authorization'] = 'Bearer $token';
+      if (token != null && token.isNotEmpty) {
+        options.headers["Authorization"] = "Bearer $token";
       }
     }
 

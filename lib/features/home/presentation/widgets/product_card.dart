@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gangg_store/core/services/service_locators.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
-import 'package:gangg_store/features/cart/presentation/cubit/cart_cubit.dart';
-import 'package:gangg_store/features/cart/presentation/cubit/cart_state.dart';
 import 'package:gangg_store/features/home/data/model/product_model.dart';
 import 'package:gangg_store/features/prodeuct_details/presentation/screens/product_details_screen.dart';
 import 'package:gangg_store/features/favourites/presentation/cubit/wishlist_cubit.dart';
+import '../../../../core/utils/add_to_cart_helper.dart';
 import '../../../../core/utils/guest_guard.dart';
 import '../../../favourites/presentation/cubit/wishlist_state.dart';
 
@@ -23,6 +22,7 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
+
   @override
   Widget build(BuildContext context) {
     final hasDiscount = widget.product.discountPercentage > 0;
@@ -225,7 +225,12 @@ class _ProductCardState extends State<ProductCard> {
                         GuestGuard.run(
                           context,
                           onAuthenticated: () {
-                            _showAddToCartDialog(context);
+                            CartHelper.addToCart(
+                              context: context,
+                              productId: widget.product.id,
+                              quantity: 1,
+                              productName: widget.product.name,
+                            );
                           },
                         );
                       },
@@ -256,45 +261,6 @@ class _ProductCardState extends State<ProductCard> {
     );
   }
 
-  void _showAddToCartDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        return BlocListener<CartCubit, CartState>(
-          listener: (context, state) {
-            if (state is GetCartSuccess) {
-              Navigator.of(context, rootNavigator: true).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${widget.product.name} added to cart'),
-                  duration: const Duration(seconds: 2),
-                ),
-              );
-            } else if (state is GetCartFailure) {
-              Navigator.of(context, rootNavigator: true).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Error: ${state.message}'),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-          },
-          child: AlertDialog(
-            title: const Text('Add to Cart'),
-            content: const Text('Adding item to cart...'),
-            backgroundColor: Theme.of(dialogContext).scaffoldBackgroundColor,
-          ),
-        );
-      },
-    );
-
-    context.read<CartCubit>().addToCart(
-      productId: widget.product.id,
-      quantity: 1,
-    );
-  }
 }
 
 

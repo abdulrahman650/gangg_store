@@ -6,6 +6,7 @@ import 'package:gangg_store/core/services/service_locators.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
 import 'package:gangg_store/features/favourites/presentation/cubit/wishlist_cubit.dart';
 import '../../../../core/utils/add_to_cart_helper.dart';
+import '../../../favourites/presentation/cubit/wishlist_state.dart';
 import '../cubit/product_details_cubit.dart';
 import '../cubit/product_details_state.dart';
 
@@ -26,36 +27,42 @@ class _BottomNavigationState extends State<BottomNavigation> {
         child: Row(
           children: [
             BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
-              builder: (context, state) {
-                final product =
-                state is ProductDetailsLoaded ? state.product : null;
-
-                if (product == null) {
+              builder: (context, productState) {
+                if (productState is! ProductDetailsLoaded) {
                   return const SizedBox.shrink();
                 }
 
-                final isFavorite =
-                getIt<WishlistCubit>().isFavorite(product.id);
+                final product = productState.product;
 
-                return InkWell(
-                  onTap: () {
-                    getIt<WishlistCubit>().toggleFavorite(product);
+                return BlocBuilder<WishlistCubit, WishlistState>(
+                  builder: (context, state) {
+                    final wishlistCubit = context.read<WishlistCubit>();
+
+                    final isFavorite =
+                    wishlistCubit.isFavorite(product.id);
+
+                    return InkWell(
+                      onTap: () {
+                        wishlistCubit.toggleFavorite(product);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: AppColors.lightGray,
+                          border: Border.all(color: AppColors.gray),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Icon(
+                          isFavorite
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: isFavorite
+                              ? Colors.red
+                              : AppColors.darkGray,
+                        ),
+                      ),
+                    );
                   },
-                  child: Container(
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: AppColors.lightGray,
-                      border: Border.all(color: AppColors.gray),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Icon(
-                      isFavorite
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color:
-                      isFavorite ? Colors.red : AppColors.darkGray,
-                    ),
-                  ),
                 );
               },
             ),

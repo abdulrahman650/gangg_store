@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
 
+import '../../../../core/theme/theme_cubit.dart';
+
 class Subtotal extends StatelessWidget {
   final double subtotal;
   final double total;
@@ -14,7 +16,10 @@ class Subtotal extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: AppColors.lightGray,
+
+        color: context.isDark
+            ? AppColors.darkGray
+            : AppColors.lightGray,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(

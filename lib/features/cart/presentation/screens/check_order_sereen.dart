@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/theme_cubit.dart';
 import '../../../../core/utils/default_elevated_button.dart';
 import '../../data/model/get_cart_model.dart';
 import '../cubit/cart_cubit.dart';
@@ -118,25 +119,29 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final subtitleColor = AppColors.darkGray;
 
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: context.isDark
+          ? Theme.of(context).scaffoldBackgroundColor
+          : AppColors.backgroundWhite,
       appBar: AppBar(
-        backgroundColor: bgColor,
+        backgroundColor: context.isDark
+            ? Theme.of(context).scaffoldBackgroundColor
+            : AppColors.backgroundWhite,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: textColor),
+          icon: Icon(Icons.arrow_back, color: AppColors.primary),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Gang Store',
           style: textTheme.titleLarge?.copyWith(
-            color: textColor,
+              color: AppColors.primary,
             fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.shopping_bag_outlined, color: textColor),
+            icon: Icon(Icons.shopping_bag_outlined, color: AppColors.primary),
             onPressed: () {},
           ),
         ],
@@ -189,7 +194,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             // Payment Method Section
             Text(
               'Payment Method',
-              style: textTheme.titleMedium?.copyWith(color: textColor),
+              style: textTheme.titleMedium?.copyWith(color:context.isDark
+              ? AppColors.white
+                  : AppColors.darkGray,),
             ),
             const SizedBox(height: 12),
 
@@ -243,7 +250,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     Text(
                       'TOTAL AMOUNT',
                       style: textTheme.titleSmall?.copyWith(
-                        color: subtitleColor,
+                        color: context.isDark
+                            ? AppColors.white
+                            : AppColors.darkGray,
                         fontSize: 12,
                         letterSpacing: 1,
                       ),
@@ -253,7 +262,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     Text(
                       "\$${total.toStringAsFixed(2)}",
                       style: textTheme.titleMedium?.copyWith(
-                        color: textColor,
+                        color: AppColors.primary,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),

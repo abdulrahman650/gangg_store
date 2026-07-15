@@ -5,6 +5,8 @@ import 'package:gangg_store/features/cart/data/model/cart_item_model.dart';
 import 'package:gangg_store/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:gangg_store/features/cart/presentation/cubit/cart_state.dart';
 
+import '../../../../core/theme/theme_cubit.dart';
+
 class CartItem extends StatelessWidget {
   final CartItemModel item;
 
@@ -37,7 +39,10 @@ class CartItem extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.lightGray,
+                // color: AppColors.lightGray,
+                color: context.isDark
+                    ? AppColors.darkGray
+                    : AppColors.lightGray,
                 borderRadius: BorderRadius.circular(18),
               ),
               child: Row(
@@ -76,7 +81,10 @@ class CartItem extends StatelessWidget {
                         Text(
                           "Stock : ${item.productStock}",
                           style: textTheme.bodySmall?.copyWith(
-                            color: AppColors.darkGray,
+
+                            color: context.isDark
+                                ? AppColors.white
+                                : AppColors.darkGray,
                           ),
                         ),
 
@@ -86,7 +94,11 @@ class CartItem extends StatelessWidget {
                           width: 120,
                           height: 38,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+
+                            color: context.isDark
+                                ? Colors.grey[500]
+                                : AppColors.white,
+
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: loading

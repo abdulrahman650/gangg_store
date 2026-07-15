@@ -33,7 +33,6 @@ class ProductDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // If we have product object, use it directly without API call
     if (product != null) {
       return MultiBlocProvider(
         providers: [
@@ -44,15 +43,11 @@ class ProductDetailScreen extends StatelessWidget {
               return cubit;
             },
           ),
-
           BlocProvider(
             create: (_) => getIt<ReviewCubit>()
               ..getReviews(productId: product!.id),
           ),
 
-          // BlocProvider(
-          //   create: (_) => getIt<CartCubit>(),
-          // ),
         ],
         child: BlocListener<CartCubit, CartState>(
           listener: (context, state) {
@@ -79,7 +74,6 @@ class ProductDetailScreen extends StatelessWidget {
       );
     }
 
-    // Otherwise fetch by ID
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -92,9 +86,6 @@ class ProductDetailScreen extends StatelessWidget {
             ..getReviews(productId: productId!),
         ),
 
-        // BlocProvider(
-        //   create: (_) => getIt<CartCubit>(),
-        // ),
       ],
       child: BlocListener<CartCubit, CartState>(
         listener: (context, state) {
@@ -144,7 +135,7 @@ class ProductDetailScreen extends StatelessWidget {
                         onPressed: () {
                           context.read<ProductDetailsCubit>().fetchProductDetails(productId!);
                         },
-                        child: const Text('Retry'),
+                        child: const Text('Retry',style: TextStyle(color: Colors.white),),
                       ),
                     ],
                   ),

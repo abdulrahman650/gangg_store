@@ -3,6 +3,7 @@ import 'package:gangg_store/core/theme/app_colors.dart';
 import 'package:gangg_store/features/category/presentation/screens/category_screen.dart';
 import 'package:gangg_store/features/home/presentation/widgets/category_item.dart';
 
+import '../../../../core/theme/theme_cubit.dart';
 import '../../../../core/utils/guest_guard.dart';
 
 class Category extends StatelessWidget {
@@ -15,12 +16,14 @@ class Category extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               'Categories',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: AppColors.black,
+                color: context.isDark
+                    ? AppColors.white
+                    : AppColors.black,
               ),
             ),
             GestureDetector(

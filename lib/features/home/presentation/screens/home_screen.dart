@@ -11,6 +11,11 @@ import 'package:gangg_store/features/home/presentation/widgets/create_account_ba
 import 'package:gangg_store/features/home/presentation/widgets/discount_card.dart';
 import 'package:gangg_store/features/home/presentation/widgets/product_card.dart';
 
+import '../../../../core/services/service_locators.dart';
+import '../../../../core/theme/theme_cubit.dart';
+import '../../../search/presentation/cubit/search_cubit.dart';
+import '../../../search/presentation/screens/search_screen.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -68,19 +73,32 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             const SizedBox(height: 10),
                             // Search Bar
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                              decoration: BoxDecoration(
-                                color: AppColors.gray,
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: DefaultTextFormField(
-                                hintText: 'Search for Gang accessories...',
-                                prefixIconImageName: 'search',
-                                fillColor: AppColors.gray.withOpacity(0.5),
-                                onChanged: (value) {
-                                  // Handle search
-                                },
+                            InkWell(
+                              borderRadius: BorderRadius.circular(15),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => BlocProvider(
+                                      create: (_) => getIt<SearchCubit>()..loadProducts(),
+                                      child: const SearchScreen(),
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: IgnorePointer(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.gray,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: DefaultTextFormField(
+                                    hintText: 'Search for Gang accessories...',
+                                    prefixIconImageName: 'search',
+                                    fillColor: AppColors.gray.withOpacity(0.5),
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 20),
@@ -105,11 +123,14 @@ class HomeScreen extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
+                                 Text(
                                   'Featured Products',
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
+                                    color: context.isDark
+                                        ? AppColors.white
+                                        : AppColors.black,
                                   ),
                                 ),
                                 GestureDetector(

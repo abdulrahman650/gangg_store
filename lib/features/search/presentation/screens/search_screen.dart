@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../core/services/service_locators.dart';
+import '../../../home/data/model/product_model.dart';
+import '../../../prodeuct_details/presentation/screens/product_details_screen.dart';
+import '../cubit/search_cubit.dart';
+import '../cubit/search_state.dart';
+import '../widgets/product_serch_item.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_cubit.dart';
@@ -14,7 +21,11 @@ class SearchScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(
+    return BlocProvider(
+        create: (_) => getIt<SearchCubit>()..loadProducts(),
+        child: Builder(
+            builder: (context) {
+              return Scaffold(
       backgroundColor:Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: context.isDark
@@ -66,60 +77,179 @@ class SearchScreen extends StatelessWidget {
               prefixIconImageName: 'search', // ضيف ايكون search.svg في assets/icons/
               fillColor: AppColors.gray.withOpacity(0.5),
               onChanged: (value) {
-                // Handle search
+                context.read<SearchCubit>().onSearchChanged(value);
               },
             ),
+            const SizedBox(height: 24),
 
-            const SizedBox(height:70),
+            BlocBuilder<SearchCubit, SearchState>(
+              builder: (context, state) {
+                if (state is SearchLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
 
-            // 🏷️ Section Title
-            Text(
-              'TRENDING CATEGORIES',
-              style: textTheme.titleMedium?.copyWith(
-                color: AppColors.darkGray,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
-                fontSize: 12,
-              ),
+                if (state is SearchError) {
+                  return Center(
+                    child: Text(state.message),
+                  );
+                }
+
+                if (state is SearchLoaded) {
+                  if (state.query.isEmpty) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'TRENDING CATEGORIES',
+                          style: textTheme.titleMedium?.copyWith(
+                            color: AppColors.darkGray,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.2,
+                            fontSize: 12,
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        GridView.count(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: 1.1,
+                          children: [
+                            _buildCategoryCard(
+                              title: 'Timepieces',
+                              subtitle: 'Curated Selection',
+                              imagePath: 'assets/images/watch.png',
+                              isDark: true,
+                            ),
+                            _buildCategoryCard(
+                              title: 'Eyewear',
+                              subtitle: 'New Arrivals',
+                              imagePath: 'assets/images/glassess.png',
+                              isDark: false,
+                            ),
+                            _buildCategoryCard(
+                              title: 'Fine Leather',
+                              subtitle: 'Handcrafted excellence from Milan',
+                              imagePath: 'assets/images/bag.png',
+                              isDark: true,
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  }
+
+                  /// مفيش نتائج
+                  if (state.filteredProducts.isEmpty) {
+                    return const Padding(
+                      padding: EdgeInsets.only(top: 70),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.search_off,
+                              size: 60,
+                              color: Colors.grey,
+                            ),
+                            SizedBox(height: 16),
+                            Text(
+                              "No Products Found",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  /// النتائج
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: state.filteredProducts.length,
+                    itemBuilder: (_, index) {
+                      final ProductModel product =
+                      state.filteredProducts[index];
+
+                      return SearchProductItem(
+                        product: product,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ProductDetailScreen(
+                                productId: product.id,
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  );
+                }
+
+                return const SizedBox();
+              },
             ),
-
-            const SizedBox(height: 16),
-
-            // 📦 Categories Grid
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 1.1,
-              children: [
-                _buildCategoryCard(
-                  title: 'Timepieces',
-                  subtitle: 'Curated Selection',
-                  imagePath: 'assets/images/watch.png',
-                  isDark: true,
-                ),
-                _buildCategoryCard(
-                  title: 'Eyewear',
-                  subtitle: 'New Arrivals',
-                  imagePath: 'assets/images/glassess.png',
-                  isDark: false,
-                ),
-                _buildCategoryCard(
-                  title: 'Fine Leather',
-                  subtitle: 'Handcrafted excellence from Milan',
-                  imagePath: 'assets/images/bag.png',
-                  isDark: true,
-                  isFullWidth: true,
-                ),
-              ],
-            ),
+            // const SizedBox(height:70),
+            //
+            // // 🏷️ Section Title
+            // Text(
+            //   'TRENDING CATEGORIES',
+            //   style: textTheme.titleMedium?.copyWith(
+            //     color: AppColors.darkGray,
+            //     fontWeight: FontWeight.w600,
+            //     letterSpacing: 1.2,
+            //     fontSize: 12,
+            //   ),
+            // ),
+            //
+            // const SizedBox(height: 16),
+            //
+            // // 📦 Categories Grid
+            // GridView.count(
+            //   shrinkWrap: true,
+            //   physics: const NeverScrollableScrollPhysics(),
+            //   crossAxisCount: 2,
+            //   mainAxisSpacing: 12,
+            //   crossAxisSpacing: 12,
+            //   childAspectRatio: 1.1,
+            //   children: [
+            //     _buildCategoryCard(
+            //       title: 'Timepieces',
+            //       subtitle: 'Curated Selection',
+            //       imagePath: 'assets/images/watch.png',
+            //       isDark: true,
+            //     ),
+            //     _buildCategoryCard(
+            //       title: 'Eyewear',
+            //       subtitle: 'New Arrivals',
+            //       imagePath: 'assets/images/glassess.png',
+            //       isDark: false,
+            //     ),
+            //     _buildCategoryCard(
+            //       title: 'Fine Leather',
+            //       subtitle: 'Handcrafted excellence from Milan',
+            //       imagePath: 'assets/images/bag.png',
+            //       isDark: true,
+            //       isFullWidth: true,
+            //     ),
+            //   ],
+            // ),
 
             const SizedBox(height: 24),
           ],
+        )
+      )
+      );
+      },
         ),
-      ),
     );
   }
 
@@ -189,3 +319,4 @@ class SearchScreen extends StatelessWidget {
     );
   }
 }
+

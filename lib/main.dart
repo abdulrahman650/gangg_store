@@ -8,12 +8,14 @@ import 'core/theme/theme_cubit.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/cart/presentation/cubit/cart_cubit.dart';
+import 'features/cart/presentation/screens/check_order_sereen.dart';
 import 'features/home/presentation/cubit/home_cubit.dart';
 import 'features/layout/presentation/screens/layout_screen.dart';
 import 'features/profile/presentation/cubit/profile_cubit.dart';
 import 'features/reviews/presentation/cubit/review_cubit.dart';
 import 'features/reviews/presentation/screens/reviews_screen.dart';
 import 'features/favourites/presentation/cubit/wishlist_cubit.dart';
+import 'features/search/presentation/cubit/search_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,7 +61,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<WishlistCubit>(
           create: (_) => getIt<WishlistCubit>(),
         ),
-
+        BlocProvider<SearchCubit>(
+          create: (_) => getIt<SearchCubit>(),
+        ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {

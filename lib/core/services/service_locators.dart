@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../features/search/presentation/cubit/search_cubit.dart';
 import '../network/api_consumer.dart';
 import '../network/dio_consumer.dart';
 
@@ -144,5 +145,14 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerSingleton<WishlistCubit>(
     WishlistCubit(),
+  );
+
+
+// ===================== Search =====================
+
+  getIt.registerFactory<SearchCubit>(
+        () => SearchCubit(
+      getIt<HomeRepository>(),
+    ),
   );
 }

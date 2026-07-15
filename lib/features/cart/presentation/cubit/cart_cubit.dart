@@ -126,4 +126,12 @@ class CartCubit extends Cubit<CartState> {
       emit(CartActionFailure(e.toString()));
     }
   }
+
+  void clearCart() {
+    if (_cart == null) return;
+
+    _cart!.cartItems.clear();
+
+    emit(GetCartSuccess(_cart!));
+  }
 }

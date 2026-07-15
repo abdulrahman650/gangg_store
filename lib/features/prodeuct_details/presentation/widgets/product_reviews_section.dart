@@ -6,6 +6,8 @@ import 'package:gangg_store/features/reviews/presentation/widget/rating_sammary.
 import 'package:gangg_store/features/reviews/presentation/widget/review_card.dart';
 import 'package:gangg_store/features/reviews/presentation/widget/write_reveiw_card.dart';
 
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/theme_cubit.dart';
 import '../../../reviews/data/model/review_response_model.dart';
 import '../../../reviews/data/request/add_review_request.dart';
 import '../../../reviews/presentation/cubit/review_cubit.dart';
@@ -92,11 +94,14 @@ class ProductReviewsSection extends StatelessWidget {
 
         const SizedBox(height: 24),
 
-        const Text(
+         Text(
           "Customer Reviews",
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
+            color: context.isDark
+                ? AppColors.white
+                : AppColors.black,
           ),
         ),
 

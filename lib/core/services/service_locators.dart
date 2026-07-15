@@ -1,3 +1,5 @@
+// core/services/service_locators.dart
+
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
@@ -6,6 +8,12 @@ import '../network/api_consumer.dart';
 import '../network/dio_consumer.dart';
 
 import '../../features/auth/data/datasource/auth_remote_data_source.dart';
+import '../../features/category/data/datasource/category_remote_data_source.dart';
+import '../../features/category/data/datasource/category_remote_data_source_impl.dart';
+
+import '../../features/category/data/repos/repo.dart';
+
+import '../../features/category/presentation/cubit/category_cubit.dart';
 import '../../features/auth/data/repos/auth_repository.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
 
@@ -155,4 +163,25 @@ Future<void> setupServiceLocator() async {
       getIt<HomeRepository>(),
     ),
   );
+    getIt.registerLazySingleton<CategoryRemoteDataSource>(
+        () => CategoryRemoteDataSourceImpl(
+      getIt<ApiConsumer>(),
+    ),
+  );
+
+
+  getIt.registerLazySingleton<CategoryRepository>(
+        () => CategoryRepositoryImpl(
+      getIt<CategoryRemoteDataSource>(),
+    ),
+  );
+
+
+  getIt.registerFactory<CategoryCubit>(
+        () => CategoryCubit(
+      getIt<CategoryRepository>(),
+    ),
+  );
+  
+}
 }

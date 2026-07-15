@@ -87,8 +87,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       data: request.toJson(),
     );
 
-    return VerifyEmailModel.fromJson(response);
-  }
+    print(response);
+    print(response.runtimeType);
+
+    return VerifyEmailModel.fromResponse(response);  }
 ///resendOtp
   @override
   Future<ResendOtpModel> resendOtp(

@@ -5,9 +5,13 @@ class VerifyEmailModel {
     required this.message,
   });
 
-  factory VerifyEmailModel.fromJson(Map<String, dynamic> json) {
+  factory VerifyEmailModel.fromResponse(dynamic response) {
+    if (response is String) {
+      return VerifyEmailModel(message: response);
+    }
+
     return VerifyEmailModel(
-      message: json["message"],
+      message: response["message"] ?? "",
     );
   }
 }

@@ -109,8 +109,10 @@ class HomeScreen extends StatelessWidget {
                             const SizedBox(height: 25),
 
                             // Categories
-                            const Category(),
-                            const SizedBox(height: 20),
+                            if (CacheHelper.getData(CacheKeys.isGuest) != true) ...[
+                              const Category(),
+                              const SizedBox(height: 20),
+                            ],
 
                             // Offers - show first 4 only
                             if (state.offers.isNotEmpty)

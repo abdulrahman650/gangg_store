@@ -5,6 +5,8 @@ import 'package:gangg_store/core/theme/theme_cubit.dart';
 import 'package:gangg_store/core/utils/guest_guard.dart';
 import 'package:gangg_store/core/services/service_locators.dart';
 
+import '../../../../core/services/cache_helper.dart';
+import '../../../../core/services/cache_keys.dart';
 import '../../../category/presentation/cubit/category_cubit.dart';
 import '../../../category/presentation/cubit/category_stata.dart';
 import '../../../category/presentation/screens/category_screen.dart';
@@ -15,6 +17,12 @@ class Category extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isGuest = CacheHelper.getData(CacheKeys.isGuest) == true;
+
+    if (isGuest) {
+      return const SizedBox.shrink();
+    }
+
     return BlocProvider(
       create: (_) => getIt<CategoryCubit>()..getCategories(),
       child: const _CategoryView(),

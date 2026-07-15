@@ -5,7 +5,8 @@ import 'package:gangg_store/core/theme/app_colors.dart';
 import 'package:gangg_store/core/utils/default_elevated_button.dart';
 
 import '../../../../core/theme/theme_cubit.dart';
-import '../../../category/presentation/widgets/category_item.dart';
+import '../../../category/presentation/widgets/category_cart.dart';
+import '../../../home/presentation/widgets/category_item.dart';
 
 class WishlistItem extends StatefulWidget {
   const WishlistItem({super.key});
@@ -25,7 +26,7 @@ class _WishlistItemState extends State<WishlistItem> {
           children: [
             Stack(
               children: [
-                const CategoryItem(
+                const CategoryCart(
                   subtitle: "",
                   title: "",
                   imageAsset: 'assets/images/jewelry_category.png',

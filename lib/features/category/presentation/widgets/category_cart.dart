@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/theme/app_colors.dart';
-
-class CategoryItem extends StatelessWidget {
+import 'package:shimmer/shimmer.dart';
+class CategoryCart extends StatelessWidget {
   final String? title;
   final String? subtitle;
   final String? svgAsset;
@@ -11,10 +11,10 @@ class CategoryItem extends StatelessWidget {
   final bool isWide;
   final VoidCallback? onTap;
 
-  const CategoryItem({
+  const CategoryCart({
     super.key,
-     this.title,
-     this.subtitle,
+    this.title,
+    this.subtitle,
     this.svgAsset,
     this.imageAsset,
     required this.height,
@@ -47,9 +47,37 @@ class CategoryItem extends StatelessWidget {
           children: [
             if (imageAsset != null)
               Positioned.fill(
-                child: Image.asset(
+                child: Image.network(
                   imageAsset!,
                   fit: BoxFit.cover,
+                  loadingBuilder: (
+                      BuildContext context,
+                      Widget child,
+                      ImageChunkEvent? loadingProgress,
+                      ) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.grey.shade100,
+                      child: Container(
+                        color: Colors.white,
+                      ),
+                    );
+                  },
+                  errorBuilder: (_, __, ___) {
+                    return Container(
+                      color: Colors.grey.shade200,
+                      child: const Center(
+                        child: Icon(
+                          Icons.image_not_supported_outlined,
+                          size: 40,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
 

@@ -1,6 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../features/category/data/data_source/category_remote_data_source.dart';
+import '../../features/category/data/data_source/category_remote_data_source_impl.dart';
+import '../../features/category/data/repos/category_repository.dart';
+import '../../features/category/presentation/cubit/category_cubit.dart';
 import '../../features/search/presentation/cubit/search_cubit.dart';
 import '../network/api_consumer.dart';
 import '../network/dio_consumer.dart';
@@ -153,6 +157,26 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory<SearchCubit>(
         () => SearchCubit(
       getIt<HomeRepository>(),
+    ),
+  );
+// ===================== Category =====================
+  getIt.registerLazySingleton<CategoryRemoteDataSource>(
+        () => CategoryRemoteDataSourceImpl(
+      getIt<ApiConsumer>(),
+    ),
+  );
+
+
+  getIt.registerLazySingleton<CategoryRepository>(
+        () => CategoryRepositoryImpl(
+      getIt<CategoryRemoteDataSource>(),
+    ),
+  );
+
+
+  getIt.registerFactory<CategoryCubit>(
+        () => CategoryCubit(
+      getIt<CategoryRepository>(),
     ),
   );
 }

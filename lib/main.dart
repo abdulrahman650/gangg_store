@@ -9,6 +9,7 @@ import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/cart/presentation/cubit/cart_cubit.dart';
 import 'features/cart/presentation/screens/check_order_sereen.dart';
+import 'features/category/presentation/cubit/category_cubit.dart';
 import 'features/home/presentation/cubit/home_cubit.dart';
 import 'features/layout/presentation/screens/layout_screen.dart';
 import 'features/profile/presentation/cubit/profile_cubit.dart';
@@ -56,6 +57,9 @@ class MyApp extends StatelessWidget {
 
             return getIt<CartCubit>();
           },
+        ),
+        BlocProvider<CategoryCubit>(
+          create: (_) => getIt<CategoryCubit>(),
         ),
 
         BlocProvider<WishlistCubit>(

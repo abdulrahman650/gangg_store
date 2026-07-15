@@ -10,6 +10,8 @@ import 'package:gangg_store/features/cart/presentation/widget/cart_item.dart';
 import 'package:gangg_store/features/cart/presentation/widget/subtotal.dart';
 import 'package:gangg_store/features/search/presentation/screens/search_screen.dart';
 
+import 'check_order_sereen.dart';
+
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
@@ -184,7 +186,16 @@ class _CartScreenState extends State<CartScreen> {
                     label: "Proceed to Checkout",
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => CheckoutScreen(
+                            cart: cart,
+                          ),
+                        ),
+                      );
+                    },
                   ),
 
                   const SizedBox(height: 20),

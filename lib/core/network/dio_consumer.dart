@@ -1,3 +1,4 @@
+// core/network/dio_consumer.dart
 import 'package:dio/dio.dart';
 
 import '../errors/exceptions.dart';
@@ -25,32 +26,39 @@ class DioConsumer implements ApiConsumer {
   }
 
 ///Exception
-  RemoteException _handleDioException(DioException e) {
-    switch (e.type) {
-      case DioExceptionType.connectionTimeout:
-        return const RemoteException('Connection timeout');
+RemoteException _handleDioException(DioException e) {
+  switch (e.type) {
+    case DioExceptionType.connectionTimeout:
+      return const RemoteException('Connection timeout');
 
-      case DioExceptionType.sendTimeout:
-        return const RemoteException('Send timeout');
+    case DioExceptionType.sendTimeout:
+      return const RemoteException('Send timeout');
 
-      case DioExceptionType.receiveTimeout:
-        return const RemoteException('Receive timeout');
+    case DioExceptionType.receiveTimeout:
+      return const RemoteException('Receive timeout');
 
-      case DioExceptionType.connectionError:
-        return const RemoteException('No internet connection');
+    case DioExceptionType.connectionError:
+      return const RemoteException('No internet connection');
 
-      default:
-        if (e.response != null &&
-            e.response!.data is Map<String, dynamic>) {
-          return RemoteException(
-            e.response!.data['message'] ?? 'Something went wrong',
-          );
-        }
+    default:
+      print("========== DIO ERROR ==========");
+      print("TYPE: ${e.type}");
+      print("MESSAGE: ${e.message}");
+      print("STATUS CODE: ${e.response?.statusCode}");
+      print("RESPONSE: ${e.response?.data}");
+      print("===============================");
 
-        return const RemoteException('Something went wrong');
-    }
+      if (e.response != null) {
+        return RemoteException(
+          e.response!.data.toString(),
+        );
+      }
+
+      return RemoteException(
+        e.message ?? 'Something went wrong',
+      );
   }
-
+}
 ///get
   @override
   Future<dynamic> get(
@@ -67,8 +75,15 @@ class DioConsumer implements ApiConsumer {
 
       return response.data;
     } on DioException catch (e) {
-      throw _handleDioException(e);
-    }
+
+  print("========== GET ERROR ==========");
+  print(e);
+  print(e.response?.statusCode);
+  print(e.response?.data);
+  print("===============================");
+
+  throw _handleDioException(e);
+}
   }
 
 ///post

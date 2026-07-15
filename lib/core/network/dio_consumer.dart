@@ -1,4 +1,3 @@
-// core/network/dio_consumer.dart
 import 'package:dio/dio.dart';
 
 import '../errors/exceptions.dart';
@@ -27,41 +26,6 @@ class DioConsumer implements ApiConsumer {
     );
   }
 
-///Exception
-RemoteException _handleDioException(DioException e) {
-  switch (e.type) {
-    case DioExceptionType.connectionTimeout:
-      return const RemoteException('Connection timeout');
-
-    case DioExceptionType.sendTimeout:
-      return const RemoteException('Send timeout');
-
-    case DioExceptionType.receiveTimeout:
-      return const RemoteException('Receive timeout');
-
-    case DioExceptionType.connectionError:
-      return const RemoteException('No internet connection');
-
-    default:
-      print("========== DIO ERROR ==========");
-      print("TYPE: ${e.type}");
-      print("MESSAGE: ${e.message}");
-      print("STATUS CODE: ${e.response?.statusCode}");
-      print("RESPONSE: ${e.response?.data}");
-      print("===============================");
-
-      if (e.response != null) {
-        return RemoteException(
-          e.response!.data.toString(),
-        );
-      }
-
-      return RemoteException(
-        e.message ?? 'Something went wrong',
-      );
-  }
-}
-///get
   RemoteException _handleDioException(DioException e) {
     if (e.response != null) {
       print('ERROR STATUS: ${e.response?.statusCode}');
@@ -124,15 +88,8 @@ RemoteException _handleDioException(DioException e) {
 
       return response.data;
     } on DioException catch (e) {
-
-  print("========== GET ERROR ==========");
-  print(e);
-  print(e.response?.statusCode);
-  print(e.response?.data);
-  print("===============================");
-
-  throw _handleDioException(e);
-}
+      throw _handleDioException(e);
+    }
   }
 
   @override

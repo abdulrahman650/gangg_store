@@ -1,4 +1,3 @@
-// features/home/presentation/widgets/category.dart
 import 'package:flutter/material.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
 import 'package:gangg_store/features/category/presentation/screens/category_screen.dart';
@@ -8,43 +7,15 @@ import '../../../../core/theme/theme_cubit.dart';
 import '../../../../core/utils/guest_guard.dart';
 
 class Category extends StatelessWidget {
-
   const Category({super.key});
-
-
-  void openCategory(BuildContext context){
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const CategoryScreen(),
-      ),
-    );
-
-  }
-
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
-
       children: [
-
         Row(
-
-          mainAxisAlignment:
-          MainAxisAlignment.spaceBetween,
-
-
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-
-            const Text(
-              'Categories',
-              style: TextStyle(
-                fontSize:18,
-                fontWeight:FontWeight.bold,
-                color:AppColors.black,
             Text(
               'Categories',
               style: TextStyle(
@@ -55,126 +26,37 @@ class Category extends StatelessWidget {
                     : AppColors.black,
               ),
             ),
-
-
             GestureDetector(
-
-              onTap: (){
-                openCategory(context);
+              onTap: () {
+                GuestGuard.run(context, onAuthenticated: () {});
               },
-
-
               child: const Text(
                 'View All',
                 style: TextStyle(
-                  color:AppColors.primary,
-                  fontSize:14,
+                  color: AppColors.primary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-
             ),
-
-
           ],
-
         ),
-
-
-        const SizedBox(height:15),
-
+        const SizedBox(height: 15),
 
         SizedBox(
-
-          height:85,
-
-
+          height: 85,
           child: ListView(
-
-            scrollDirection:Axis.horizontal,
-
-
+            scrollDirection: Axis.horizontal,
             children: [
-
-
-              CategoryItem(
-
-                IconImageName:'bag',
-
-                label:'Bags',
-
-                onTap: (){
-                  openCategory(context);
-                },
-
-              ),
-
-
-
-              CategoryItem(
-
-                IconImageName:'watch',
-
-                label:'Watches',
-
-                onTap: (){
-                  openCategory(context);
-                },
-
-              ),
-
-
-
-              CategoryItem(
-
-                IconImageName:'jewelry',
-
-                label:'Jewelry',
-
-                onTap: (){
-                  openCategory(context);
-                },
-
-              ),
-
-
-
-              CategoryItem(
-
-                IconImageName:'glasses',
-
-                label:'Eyewear',
-
-                onTap: (){
-                  openCategory(context);
-                },
-
-              ),
-
-
-
-              CategoryItem(
-
-                IconImageName:'belts',
-
-                label:'Accessories',
-
-                onTap: (){
-                  openCategory(context);
-                },
-
-              ),
-
-
+              CategoryItem(IconImageName: 'bag', label: 'Bags'),
+              CategoryItem(IconImageName: 'watch', label: 'Watches'),
+              CategoryItem(IconImageName: 'jewelry', label: 'Jewelry'),
+              CategoryItem(IconImageName: 'glasses', label: 'Eyewear'),
+              CategoryItem(IconImageName: "belts", label: 'Belts'),
             ],
-
           ),
-
         ),
-
       ],
-
     );
-
   }
-
 }

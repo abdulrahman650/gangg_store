@@ -1,8 +1,6 @@
-// features/category/presentation/widgets/category_item.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../category/presentation/screens/category_screen.dart';
 
 class CategoryItem extends StatelessWidget {
   final String? title;

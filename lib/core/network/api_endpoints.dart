@@ -1,4 +1,3 @@
-// core/network/api_endpoints.dart
 class EndPoints {
   static const String baseUrl = 'https://accessories-eshop.runasp.net/api/';
 
@@ -15,8 +14,6 @@ class EndPoints {
   static const String forgotPassword = 'auth/forgot-password';
   static const String resetPassword = 'auth/reset-password';
   static const String changePassword = 'auth/change-password';
-  static const String categories = 'categories';
-  static const String products = 'products';
 
   // ===================== Products =====================
 

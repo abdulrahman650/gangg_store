@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import '../errors/exceptions.dart';
 import 'api_consumer.dart';
 import 'api_endpoints.dart';
-import 'interceptor.dart';
+import 'auth_interceptor.dart';
 
 class DioConsumer implements ApiConsumer {
   final Dio dio;
@@ -16,10 +16,12 @@ class DioConsumer implements ApiConsumer {
       receiveTimeout: const Duration(seconds: 30),
       sendTimeout: const Duration(seconds: 30),
       headers: {
-        'Content-Type': 'application/json',
         'Accept': 'application/json',
+        // شيلت Content-Type من هنا عشان GET requests
       },
+      validateStatus: (status) => true,
     );
+    
     dio.interceptors.add(
       AuthInterceptor(),
     );
@@ -60,6 +62,39 @@ RemoteException _handleDioException(DioException e) {
   }
 }
 ///get
+  RemoteException _handleDioException(DioException e) {
+    if (e.response != null) {
+      print('ERROR STATUS: ${e.response?.statusCode}');
+      print('ERROR DATA: ${e.response?.data}');
+      print('ERROR HEADERS: ${e.response?.headers}');
+    }
+
+    switch (e.type) {
+      case DioExceptionType.connectionTimeout:
+        return const RemoteException('Connection timeout');
+
+      case DioExceptionType.sendTimeout:
+        return const RemoteException('Send timeout');
+
+      case DioExceptionType.receiveTimeout:
+        return const RemoteException('Receive timeout');
+
+      case DioExceptionType.connectionError:
+        return const RemoteException('No internet connection');
+
+      default:
+        if (e.response != null &&
+            e.response!.data is Map<String, dynamic>) {
+          final data = e.response!.data as Map<String, dynamic>;
+          return RemoteException(
+            data['message'] ?? data['title'] ?? 'Something went wrong',
+          );
+        }
+
+        return const RemoteException('Something went wrong');
+    }
+  }
+
   @override
   Future<dynamic> get(
       String path, {
@@ -70,8 +105,22 @@ RemoteException _handleDioException(DioException e) {
       final response = await dio.get(
         path,
         queryParameters: queryParameters,
-        options: Options(headers: headers),
+        options: Options(
+          headers: {
+            ...?headers,
+            // GET requests: Accept بس، مش Content-Type
+            'Accept': 'application/json',
+          },
+        ),
       );
+
+      if (response.statusCode != null && response.statusCode! >= 400) {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+        );
+      }
 
       return response.data;
     } on DioException catch (e) {
@@ -86,7 +135,6 @@ RemoteException _handleDioException(DioException e) {
 }
   }
 
-///post
   @override
   Future<dynamic> post(
       String path, {
@@ -99,8 +147,22 @@ RemoteException _handleDioException(DioException e) {
         path,
         data: data,
         queryParameters: queryParameters,
-        options: Options(headers: headers),
+        options: Options(
+          headers: {
+            ...?headers,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
       );
+
+      if (response.statusCode != null && response.statusCode! >= 400) {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+        );
+      }
 
       return response.data;
     } on DioException catch (e) {
@@ -108,7 +170,6 @@ RemoteException _handleDioException(DioException e) {
     }
   }
 
-///put
   @override
   Future<dynamic> put(
       String path, {
@@ -121,8 +182,22 @@ RemoteException _handleDioException(DioException e) {
         path,
         data: data,
         queryParameters: queryParameters,
-        options: Options(headers: headers),
+        options: Options(
+          headers: {
+            ...?headers,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
       );
+
+      if (response.statusCode != null && response.statusCode! >= 400) {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+        );
+      }
 
       return response.data;
     } on DioException catch (e) {
@@ -130,7 +205,6 @@ RemoteException _handleDioException(DioException e) {
     }
   }
 
-///patch
   @override
   Future<dynamic> patch(
       String path, {
@@ -143,8 +217,22 @@ RemoteException _handleDioException(DioException e) {
         path,
         data: data,
         queryParameters: queryParameters,
-        options: Options(headers: headers),
+        options: Options(
+          headers: {
+            ...?headers,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
       );
+
+      if (response.statusCode != null && response.statusCode! >= 400) {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+        );
+      }
 
       return response.data;
     } on DioException catch (e) {
@@ -152,7 +240,6 @@ RemoteException _handleDioException(DioException e) {
     }
   }
 
-///delete
   @override
   Future<dynamic> delete(
       String path, {
@@ -165,8 +252,22 @@ RemoteException _handleDioException(DioException e) {
         path,
         data: data,
         queryParameters: queryParameters,
-        options: Options(headers: headers),
+        options: Options(
+          headers: {
+            ...?headers,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
       );
+
+      if (response.statusCode != null && response.statusCode! >= 400) {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+        );
+      }
 
       return response.data;
     } on DioException catch (e) {

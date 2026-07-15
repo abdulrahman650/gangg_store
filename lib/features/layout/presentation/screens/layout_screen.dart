@@ -1,8 +1,10 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gangg_store/features/search/presentation/screens/search_screen.dart';
+import '../../../../core/services/service_locators.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_cubit.dart';
 import '../../../../core/utils/guest_guard.dart';
@@ -11,6 +13,7 @@ import '../../../category/presentation/screens/category_screen.dart';
 import '../../../favourites/presentation/screens/wishlist_tab.dart';
 import '../../../home/presentation/screens/home_screen.dart';
 import '../../../profile/presentation/screens/profile_screen.dart';
+import '../../../search/presentation/cubit/search_cubit.dart';
 
 
 class Layout extends StatefulWidget {
@@ -104,7 +107,7 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(CupertinoIcons.square_grid_2x2, size: 20),
-                  label: "Cart",
+                  label: "Category",
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.favorite_border,size: 20),
@@ -154,7 +157,10 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const SearchScreen(),
+                            builder: (_) => BlocProvider(
+                              create: (_) => getIt<SearchCubit>(),
+                              child: const SearchScreen(),
+                            ),
                           ),
                         );
                       },

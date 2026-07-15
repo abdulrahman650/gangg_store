@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
 
+import '../../../../core/theme/theme_cubit.dart';
+
 class Subtotal extends StatelessWidget {
-  const Subtotal({super.key});
+  final double subtotal;
+  final double total;
+  const Subtotal({super.key, required this.subtotal, required this.total});
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    
 
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: AppColors.lightGray,
+
+        color: context.isDark
+            ? AppColors.darkGray
+            : AppColors.lightGray,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
@@ -19,7 +27,7 @@ class Subtotal extends StatelessWidget {
 
           _priceRow(
             title: "Subtotal",
-            value: "\$900.00",
+            value: "\$${subtotal.toStringAsFixed(2)}",
             textTheme: textTheme,
           ),
 
@@ -52,7 +60,7 @@ class Subtotal extends StatelessWidget {
               const Spacer(),
 
               Text(
-                "\$950.00",
+                "\$${total.toStringAsFixed(2)}",
                 style: textTheme.titleLarge?.copyWith(
                   color: AppColors.primary,
                   fontWeight: FontWeight.bold,

@@ -1,15 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gangg_store/core/services/service_locators.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
+import 'package:gangg_store/features/home/data/model/product_model.dart';
 import 'package:gangg_store/features/prodeuct_details/presentation/screens/product_details_screen.dart';
+import 'package:gangg_store/features/favourites/presentation/cubit/wishlist_cubit.dart';
+import '../../../../core/utils/add_to_cart_helper.dart';
 import '../../../../core/utils/guest_guard.dart';
-class ProductCard extends StatelessWidget {
-  const ProductCard({super.key, required this.title, required this.price});
+import '../../../favourites/presentation/cubit/wishlist_state.dart';
 
-  final String title;
-  final String price;
+class ProductCard extends StatefulWidget {
+  final ProductModel product;
+
+  const ProductCard({
+    super.key,
+    required this.product,
+  });
+
+  @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
 
   @override
   Widget build(BuildContext context) {
+    final hasDiscount = widget.product.discountPercentage > 0;
+
     return InkWell(
       onTap: () {
         GuestGuard.run(
@@ -18,13 +35,12 @@ class ProductCard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => ProductDetailScreen(),
+                builder: (_) => ProductDetailScreen(productId: widget.product.id),
               ),
             );
           },
         );
       },
-
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.white,
@@ -36,21 +52,73 @@ class ProductCard extends StatelessWidget {
             Expanded(
               child: Stack(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.gray,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(16),
+                  ///Image
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     color: AppColors.gray,
+                  //     borderRadius: const BorderRadius.vertical(
+                  //       top: Radius.circular(16),
+                  //     ),
+                  //   ),
+                  //   child: ClipRRect(
+                  //     borderRadius: const BorderRadius.vertical(
+                  //       top: Radius.circular(16),
+                  //     ),
+                  //     child: Image.network(
+                  //       product.coverPictureUrl,
+                  //       fit: BoxFit.cover,
+                  //       width: double.infinity,
+                  //       height: double.infinity,
+                  //       alignment: Alignment.center,
+                  //       loadingBuilder: (context, child, loadingProgress) {
+                  //         if (loadingProgress == null) return child;
+                  //         return Container(
+                  //           color: AppColors.gray,
+                  //           child: const Center(
+                  //             child: CircularProgressIndicator(
+                  //               color: AppColors.primary,
+                  //             ),
+                  //           ),
+                  //         );
+                  //       },
+                  //       errorBuilder: (context, error, stackTrace) {
+                  //         return Container(
+                  //           color: AppColors.gray,
+                  //           child: const Icon(
+                  //             Icons.image_not_supported,
+                  //             color: AppColors.darkGray,
+                  //           ),
+                  //         );
+                  //       },
+                  //     ),
+                  //   ),
+                  // ),
+                  // Discount Badge
+                  _ProductImage(imageUrl: widget.product.imageUrl),
+                  if (hasDiscount)
+                    Positioned(
+                      top: 8,
+                      left: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          '-${widget.product.discountPercentage.toInt()}%',
+                          style: const TextStyle(
+                            color: AppColors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
-                    child: Image.network(
-                      'https://api.ecom.longines.com/media/catalog/product/w/a/watch-collection-longines-spirit-zulu-time-1925-l3-803-5-53-6-fdc6b9-hero.png?w=960',
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
-                      alignment: Alignment.center,
-                    ),
-                  ),
+                  // Favorite Button
                   Positioned(
                     top: 10,
                     right: 10,
@@ -60,21 +128,26 @@ class ProductCard extends StatelessWidget {
                         GuestGuard.run(
                           context,
                           onAuthenticated: () {
-                            // Add/Remove Favorite
+                            getIt<WishlistCubit>().toggleFavorite(widget.product);
                           },
                         );
                       },
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: const BoxDecoration(
-                          color: AppColors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.favorite_border,
-                          size: 16,
-                          color: AppColors.black,
-                        ),
+                      child: BlocBuilder<WishlistCubit, WishlistState>(
+                        builder: (context, state) {
+                          final isFavorite = getIt<WishlistCubit>().isFavorite(widget.product.id);
+                          return Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: const BoxDecoration(
+                              color: AppColors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              isFavorite ? Icons.favorite : Icons.favorite_border,
+                              size: 16,
+                              color: isFavorite ? Colors.red : AppColors.black,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -87,7 +160,7 @@ class ProductCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    widget.product.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -96,19 +169,54 @@ class ProductCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 2),
-                  const Text(
-                    '★ 4.8',
-                    style: TextStyle(fontSize: 11, color: AppColors.black),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, color: Colors.amber, size: 12),
+                      Text(
+                        ' ${widget.product.rating > 0 ? widget.product.rating.toStringAsFixed(1) : 'New'}',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: AppColors.black,
+                        ),
+                      ),
+                      if (widget.product.reviewsCount > 0)
+                        Text(
+                          ' (${widget.product.reviewsCount})',
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: AppColors.darkGray,
+                          ),
+                        ),
+                    ],
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    price,
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                  // Price
+                  if (hasDiscount) ...[
+                    Text(
+                      widget.product.formattedPrice,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: AppColors.darkGray.withAlpha(160),
+                        decoration: TextDecoration.lineThrough,
+                      ),
                     ),
-                  ),
+                    Text(
+                      widget.product.formattedDiscountedPrice,
+                      style: const TextStyle(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ] else
+                    Text(
+                      widget.product.formattedPrice,
+                      style: const TextStyle(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
                   const SizedBox(height: 8),
                   SizedBox(
                     width: double.infinity,
@@ -117,7 +225,12 @@ class ProductCard extends StatelessWidget {
                         GuestGuard.run(
                           context,
                           onAuthenticated: () {
-                            // Add To Cart
+                            CartHelper.addToCart(
+                              context: context,
+                              productId: widget.product.id,
+                              quantity: 1,
+                              productName: widget.product.name,
+                            );
                           },
                         );
                       },
@@ -143,6 +256,60 @@ class ProductCard extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+}
+
+
+
+class _ProductImage extends StatefulWidget {
+  final String imageUrl;
+  const _ProductImage({required this.imageUrl});
+  @override
+  State<_ProductImage> createState() => _ProductImageState();
+}
+
+class _ProductImageState extends State<_ProductImage> {
+  bool _hasError = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final url = _hasError ? ProductModel.fallbackImageUrl : widget.imageUrl;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.gray,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+        child: Image.network(
+          url,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+          errorBuilder: (context, error, stackTrace) {
+            if (!_hasError) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) setState(() => _hasError = true);
+              });
+              return Container(color: AppColors.gray);
+            }
+            return Container(
+              color: AppColors.gray,
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.image_not_supported, color: AppColors.darkGray, size: 40),
+                  SizedBox(height: 4),
+                  Text('No Image', style: TextStyle(color: AppColors.darkGray, fontSize: 10)),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );

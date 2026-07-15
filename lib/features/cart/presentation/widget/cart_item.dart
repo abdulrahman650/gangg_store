@@ -1,145 +1,209 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
+import 'package:gangg_store/features/cart/data/model/cart_item_model.dart';
+import 'package:gangg_store/features/cart/presentation/cubit/cart_cubit.dart';
+import 'package:gangg_store/features/cart/presentation/cubit/cart_state.dart';
 
-class CartItem extends StatefulWidget {
-  const CartItem({super.key});
+import '../../../../core/theme/theme_cubit.dart';
 
-  @override
-  State<CartItem> createState() => _CartItemState();
-}
+class CartItem extends StatelessWidget {
+  final CartItemModel item;
 
-class _CartItemState extends State<CartItem> {
-  int quantity = 1;
+  const CartItem({
+    super.key,
+    required this.item,
+  });
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.lightGray,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: SizedBox(
-              width: 90,
-              height: 90,
-              child: Image.network(
-                'https://www.pngarts.com/files/4/Women-Bag-PNG-Photo.png',
-                fit: BoxFit.cover,
+    return BlocBuilder<CartCubit, CartState>(
+      buildWhen: (previous, current) {
+        if (current is CartActionLoading) {
+          return current.cartItemId == item.itemId;
+        }
+        return current is CartActionSuccess ||
+            current is GetCartSuccess;
+      },
+      builder: (context, state) {
+        final loading = state is CartActionLoading &&
+            state.cartItemId == item.itemId;
+
+        return AnimatedOpacity(
+          duration: const Duration(milliseconds: 200),
+          opacity: loading ? .6 : 1,
+          child: IgnorePointer(
+            ignoring: loading,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                // color: AppColors.lightGray,
+                color: context.isDark
+                    ? AppColors.darkGray
+                    : AppColors.lightGray,
+                borderRadius: BorderRadius.circular(18),
               ),
-            ),
-          ),
-
-          const SizedBox(width: 16),
-
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Signature Tote",
-                  style: textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.black,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: SizedBox(
+                      width: 90,
+                      height: 90,
+                      child: Image.network(
+                        item.productCoverUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) =>
+                        const Icon(Icons.image_not_supported),
+                      ),
+                    ),
                   ),
-                ),
 
-                const SizedBox(height: 4),
+                  const SizedBox(width: 16),
 
-                Text(
-                  "Charcoal / Large",
-                  style: textTheme.bodySmall?.copyWith(
-                    color: AppColors.darkGray,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.productName,
+                          style: textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.black,
+                          ),
+                        ),
+
+                        const SizedBox(height: 5),
+
+                        Text(
+                          "Stock : ${item.productStock}",
+                          style: textTheme.bodySmall?.copyWith(
+
+                            color: context.isDark
+                                ? AppColors.white
+                                : AppColors.darkGray,
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        Container(
+                          width: 120,
+                          height: 38,
+                          decoration: BoxDecoration(
+
+                            color: context.isDark
+                                ? Colors.grey[500]
+                                : AppColors.white,
+
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: loading
+                              ? const Center(
+                            child: SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                              ),
+                            ),
+                          )
+                              : Row(
+                            children: [
+                              Expanded(
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () {
+                                    if (item.quantity > 1) {
+                                      context.read<CartCubit>().updateQuantity(
+                                        cartItemId: item.itemId,
+                                        quantity: item.quantity - 1,
+                                      );
+                                    } else {
+                                      context.read<CartCubit>().deleteCartItem(
+                                        cartItemId: item.itemId,
+                                      );
+                                    }
+                                  },
+
+                                  icon: const Icon(Icons.remove),
+                                ),
+                              ),
+
+                              Text(
+                                item.quantity.toString(),
+                                style: textTheme.bodyMedium,
+                              ),
+
+                              Expanded(
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () {
+                                    context
+                                        .read<CartCubit>()
+                                        .updateQuantity(
+                                      cartItemId: item.itemId,
+                                      quantity:
+                                      item.quantity + 1,
+                                    );
+                                  },
+                                  icon: const Icon(Icons.add),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
 
-                const SizedBox(height: 16),
+                  const SizedBox(width: 8),
 
-                Container(
-                  height: 38,
-                  width: 115,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Expanded(
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          iconSize: 18,
-                          onPressed: () {
-                            if (quantity > 1) {
-                              setState(() {
-                                quantity--;
-                              });
-                            }
-                          },
-                          icon:
-                          SvgPicture.asset("assets/icons/delete.svg"),
+                      loading
+                          ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      )
+                          : IconButton(
+                        onPressed: () {
+                          context
+                              .read<CartCubit>()
+                              .deleteCartItem(
+                            cartItemId: item.itemId,
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.delete_outline,
+                          color: Colors.grey,
                         ),
                       ),
 
-                      Text(
-                        quantity.toString(),
-                        style: textTheme.bodyMedium,
-                      ),
+                      const SizedBox(height: 40),
 
-                      Expanded(
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          iconSize: 18,
-                          onPressed: () {
-                            setState(() {
-                              quantity++;
-                            });
-                          },
-                          icon: const Icon(Icons.add),
+                      Text(
+                        "\$${item.totalPrice.toStringAsFixed(2)}",
+                        style: textTheme.titleMedium?.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-
-          const SizedBox(width: 10),
-
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              IconButton(
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.delete_outline,
-                  color: Colors.grey,
-                  size: 20,
-                )
-              ),
-
-              const SizedBox(height: 40),
-
-              Text(
-                "\$450.00",
-                style: textTheme.titleMedium?.copyWith(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

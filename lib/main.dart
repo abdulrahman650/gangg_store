@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'core/services/cache_helper.dart';
 import 'core/services/service_locators.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
-import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/cart/presentation/cubit/cart_cubit.dart';
-import 'features/cart/presentation/screens/check_order_sereen.dart';
 import 'features/category/presentation/cubit/category_cubit.dart';
 import 'features/home/presentation/cubit/home_cubit.dart';
-import 'features/layout/presentation/screens/layout_screen.dart';
 import 'features/profile/presentation/cubit/profile_cubit.dart';
-import 'features/reviews/presentation/cubit/review_cubit.dart';
-import 'features/reviews/presentation/screens/reviews_screen.dart';
 import 'features/favourites/presentation/cubit/wishlist_cubit.dart';
 import 'features/search/presentation/cubit/search_cubit.dart';
+import 'features/splash/presentation/screens/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -81,7 +76,7 @@ class MyApp extends StatelessWidget {
             // home: authCubit.isLoggedIn
             //     ? const Layout()
             //     : const LoginView(),
-              home:LoginView(),
+              home:SplashScreen(),
           );
         },
       ),

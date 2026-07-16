@@ -11,66 +11,85 @@ class CounterItems extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
       builder: (context, state) {
-        if (state is! ProductDetailsLoaded) {
-          return Row(
-            children: [
-              _buildButton(context, Icons.remove, null),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.0),
-                child: Text(
-                  '1',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-              _buildButton(context, Icons.add, null),
-            ],
-          );
-        }
+        final quantity =
+        state is ProductDetailsLoaded ? state.quantity : 1;
 
-        final quantity = state.quantity;
-        final maxStock = state.product.stock;
+        final maxStock =
+        state is ProductDetailsLoaded ? state.product.stock : 1;
 
         return Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            _buildButton(
-              context,
-              Icons.remove,
-              quantity > 1 ? () => context.read<ProductDetailsCubit>().decrementQuantity() : null,
+            _CounterButton(
+              icon: Icons.remove,
+              enabled: quantity > 1,
+              onTap: quantity > 1
+                  ? () => context
+                  .read<ProductDetailsCubit>()
+                  .decrementQuantity()
+                  : null,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: 50,
+              alignment: Alignment.center,
               child: Text(
-                '$quantity',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                "$quantity",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            _buildButton(
-              context,
-              Icons.add,
-              quantity < maxStock ? () => context.read<ProductDetailsCubit>().incrementQuantity() : null,
+
+            _CounterButton(
+              icon: Icons.add,
+              enabled: quantity < maxStock,
+              onTap: quantity < maxStock
+                  ? () => context
+                  .read<ProductDetailsCubit>()
+                  .incrementQuantity()
+                  : null,
             ),
           ],
         );
       },
     );
   }
+}
 
-  Widget _buildButton(BuildContext context, IconData icon, VoidCallback? onTap) {
-    final isEnabled = onTap != null;
+class _CounterButton extends StatelessWidget {
+  final IconData icon;
+  final bool enabled;
+  final VoidCallback? onTap;
 
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          color: isEnabled ? AppColors.white : AppColors.gray,
-          border: Border.all(color: isEnabled ? AppColors.gray : AppColors.darkGray),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Icon(
-          icon,
-          size: 16,
-          color: isEnabled ? AppColors.black : AppColors.darkGray,
+  const _CounterButton({
+    required this.icon,
+    required this.enabled,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: enabled
+          ? AppColors.primary.withOpacity(.08)
+          : AppColors.gray.withOpacity(.25),
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: SizedBox(
+          width: 36,
+          height: 36,
+          child: Icon(
+            icon,
+            size: 18,
+            color: enabled
+                ? AppColors.primary
+                : AppColors.darkGray,
+          ),
         ),
       ),
     );

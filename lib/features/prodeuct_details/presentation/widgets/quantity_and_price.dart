@@ -14,50 +14,77 @@ class QuantityAndPrice extends StatelessWidget {
       builder: (context, state) {
         if (state is! ProductDetailsLoaded) {
           return Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 18,
+              vertical: 16,
+            ),
             decoration: BoxDecoration(
-              color: AppColors.lightGray,
-              borderRadius: BorderRadius.circular(12),
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: AppColors.gray.withOpacity(.25),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(.05),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                ),
+              ],
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      '  QUANTITY',
-                      style: TextStyle(
-                        color: AppColors.darkGray,
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "QUANTITY",
+                        style: TextStyle(
+                          color: AppColors.darkGray,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1,
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    CounterItems(),
-                  ],
+                      const SizedBox(height: 14),
+                      const CounterItems(),
+                    ],
+                  ),
                 ),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      'TOTAL PRICE',
-                      style: TextStyle(
-                        color: AppColors.darkGray,
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
+
+                Container(
+                  width: 1,
+                  height: 55,
+                  color: AppColors.gray.withOpacity(.3),
+                ),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Text(
+                        "TOTAL PRICE",
+                        style: TextStyle(
+                          color: AppColors.darkGray,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1,
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      '\$0.00',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
+                      const SizedBox(height: 14),
+                      Text(
+                        state is ProductDetailsLoaded
+                            ? state.formattedTotalPrice
+                            : "\$0.00",
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -65,50 +92,75 @@ class QuantityAndPrice extends StatelessWidget {
         }
 
         return Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 18,
+            vertical: 16,
+          ),
           decoration: BoxDecoration(
-            color: AppColors.lightGray,
-            borderRadius: BorderRadius.circular(12),
+            color: Theme.of(context).cardColor,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: AppColors.gray.withOpacity(.25),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(.05),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
+              ),
+            ],
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    '  QUANTITY',
-                    style: TextStyle(
-                      color: AppColors.darkGray,
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "QUANTITY",
+                      style: TextStyle(
+                        color: AppColors.darkGray,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1,
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  CounterItems(),
-                ],
+                    const SizedBox(height: 14),
+                    const CounterItems(),
+                  ],
+                ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const Text(
-                    'TOTAL PRICE',
-                    style: TextStyle(
-                      color: AppColors.darkGray,
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
+
+              Container(
+                width: 1,
+                height: 55,
+                color: AppColors.gray.withOpacity(.3),
+              ),
+
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Text(
+                      "TOTAL PRICE",
+                      style: TextStyle(
+                        color: AppColors.darkGray,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1,
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    state.formattedTotalPrice,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primary,
+                    const SizedBox(height: 14),
+                    Text(
+                      state.formattedTotalPrice,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),

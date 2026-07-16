@@ -14,7 +14,8 @@ import 'package:gangg_store/features/prodeuct_details/presentation/widgets/botto
 import 'package:gangg_store/features/prodeuct_details/presentation/widgets/quantity_and_price.dart';
 import 'package:gangg_store/features/search/presentation/screens/search_screen.dart';
 import 'package:gangg_store/features/prodeuct_details/presentation/widgets/product_reviews_section.dart';
-
+import '../../../../core/widgets/network_image_with_shimmer.dart';
+import '../widgets/product_loading.dart';
 import '../../../reviews/presentation/cubit/review_cubit.dart';
 import '../../../reviews/presentation/cubit/review_state.dart';
 
@@ -114,11 +115,7 @@ class ProductDetailScreen extends StatelessWidget {
         child: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
           builder: (context, state) {
             if (state is ProductDetailsLoading) {
-              return const Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(color: AppColors.primary),
-                ),
-              );
+              return const ProductLoading();
             }
 
             if (state is ProductDetailsError) {
@@ -150,11 +147,7 @@ class ProductDetailScreen extends StatelessWidget {
               );
             }
 
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(color: AppColors.primary),
-              ),
-            );
+            return const ProductLoading();
           },
         ),
       ),
@@ -224,101 +217,15 @@ class _ProductDetailsView extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         children: [
           // Product Image
-          Container(
-            width: double.infinity,
-            height: 320,
-            decoration: BoxDecoration(
-              color: AppColors.gray,
+          Hero(
+            tag: product.id,
+            child: NetworkImageWithShimmer(
+              imageUrl: product.coverPictureUrl,
+              width: double.infinity,
+              height: 320,
               borderRadius: BorderRadius.circular(24),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(24),
-              child: Image.network(
-                product.coverPictureUrl,
-                width: double.infinity,
-                height: double.infinity,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-
-                  return Container(
-                    color: AppColors.gray,
-                    child: const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  );
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: AppColors.gray,
-                    child: const Center(
-                      child: Icon(
-                        Icons.image_not_supported,
-                        size: 60,
-                        color: AppColors.darkGray,
-                      ),
-                    ),
-                  );
-                },
-              ),
             ),
           ),
-          // // Product Image Carousel
-          // SizedBox(
-          //   height: 320,
-          //   child: ListView.builder(
-          //     primary: false,
-          //     scrollDirection: Axis.horizontal,
-          //     itemCount: product.productPictures.isNotEmpty
-          //         ? product.productPictures.length
-          //         : 1,
-          //     itemBuilder: (BuildContext context, int index) {
-          //       final imageUrl = product.productPictures.isNotEmpty
-          //           ? product.productPictures[index]
-          //           : product.coverPictureUrl;
-          //       return Container(
-          //         margin: const EdgeInsets.only(right: 16),
-          //         width: double.infinity,
-          //         decoration: BoxDecoration(
-          //           color: AppColors.gray,
-          //           borderRadius: BorderRadius.circular(24),
-          //         ),
-          //         child: ClipRRect(
-          //           borderRadius: BorderRadius.circular(24),
-          //           child: Image.network(
-          //             imageUrl,
-          //             fit: BoxFit.cover,
-          //             width: double.infinity,
-          //             height: double.infinity,
-          //             alignment: Alignment.center,
-          //             loadingBuilder: (context, child, loadingProgress) {
-          //               if (loadingProgress == null) return child;
-          //               return Container(
-          //                 color: AppColors.gray,
-          //                 child: const Center(
-          //                   child: CircularProgressIndicator(
-          //                     color: AppColors.primary,
-          //                   ),
-          //                 ),
-          //               );
-          //             },
-          //             errorBuilder: (context, error, stackTrace) {
-          //               return Container(
-          //                 color: AppColors.gray,
-          //                 child: const Icon(
-          //                   Icons.image_not_supported,
-          //                   color: AppColors.darkGray,
-          //                 ),
-          //               );
-          //             },
-          //           ),
-          //         ),
-          //       );
-          //     },
-          //   ),
-          // ),
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -430,30 +337,16 @@ class _ProductDetailsView extends StatelessWidget {
 
           // Color & Stock Info
           Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: _getColorFromString(product.color),
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.gray),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Color: ${product.color}',
-                style: textTheme.bodyMedium?.copyWith(
-                  color: AppColors.darkGray,
-                ),
-              ),
-              const Spacer(),
               Text(
                 product.stock > 0
                     ? 'In Stock (${product.stock})'
                     : 'Out of Stock',
                 style: TextStyle(
-                  color: product.stock > 0 ? Colors.green : Colors.red,
+                  color: product.stock > 0
+                      ? Colors.green
+                      : Colors.red,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -548,22 +441,4 @@ class _ProductDetailsView extends StatelessWidget {
     );
   }
 
-  Color _getColorFromString(String colorName) {
-    switch (colorName.toLowerCase()) {
-      case 'black':
-        return Colors.black;
-      case 'white':
-        return Colors.white;
-      case 'silver':
-        return Colors.grey;
-      case 'gold':
-        return Colors.amber;
-      case 'navy':
-        return const Color(0xFF000080);
-      case 'grey':
-        return Colors.grey;
-      default:
-        return Colors.grey;
-    }
-  }
 }

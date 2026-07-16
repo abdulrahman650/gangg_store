@@ -8,7 +8,8 @@ import 'package:gangg_store/features/favourites/presentation/cubit/wishlist_cubi
 import '../../../../core/utils/add_to_cart_helper.dart';
 import '../../../../core/utils/guest_guard.dart';
 import '../../../favourites/presentation/cubit/wishlist_state.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shimmer/shimmer.dart';
 class ProductCard extends StatefulWidget {
   final ProductModel product;
 
@@ -267,7 +268,11 @@ class _ProductCardState extends State<ProductCard> {
 
 class _ProductImage extends StatefulWidget {
   final String imageUrl;
-  const _ProductImage({required this.imageUrl});
+
+  const _ProductImage({
+    required this.imageUrl,
+  });
+
   @override
   State<_ProductImage> createState() => _ProductImageState();
 }
@@ -277,41 +282,36 @@ class _ProductImageState extends State<_ProductImage> {
 
   @override
   Widget build(BuildContext context) {
-    final url = _hasError ? ProductModel.fallbackImageUrl : widget.imageUrl;
+    final imageUrl =
+    _hasError ? ProductModel.fallbackImageUrl : widget.imageUrl;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.gray,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(
+        top: Radius.circular(16),
       ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-        child: Image.network(
-          url,
-          fit: BoxFit.cover,
-          width: double.infinity,
-          height: double.infinity,
-          errorBuilder: (context, error, stackTrace) {
-            if (!_hasError) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (mounted) setState(() => _hasError = true);
-              });
-              return Container(color: AppColors.gray);
-            }
-            return Container(
-              color: AppColors.gray,
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.image_not_supported, color: AppColors.darkGray, size: 40),
-                  SizedBox(height: 4),
-                  Text('No Image', style: TextStyle(color: AppColors.darkGray, fontSize: 10)),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
+      child: CachedNetworkImage(
+        imageUrl: widget.imageUrl,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        fadeInDuration: const Duration(milliseconds: 250),
+        fadeOutDuration: Duration.zero,
+        placeholder: (context, url) {
+          return Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Container(color: Colors.white),
+          );
+        },
+        errorWidget: (context, url, error) {
+          return Image.asset(
+            "assets/images/jewelry_category.png",
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          );
+        },
+      )
     );
   }
 }

@@ -19,6 +19,9 @@ import '../../../search/presentation/cubit/search_cubit.dart';
 class Layout extends StatefulWidget {
   const Layout({super.key});
 
+  static _LayoutState? of(BuildContext context) {
+    return context.findAncestorStateOfType<_LayoutState>();
+  }
   @override
   State<Layout> createState() => _LayoutState();
 }
@@ -36,6 +39,13 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
     controller = PageController(initialPage: 0);
   }
 
+  void changeTab(int index) {
+    setState(() {
+      currentScreen = index;
+    });
+
+    controller.jumpToPage(index);
+  }
   @override
   void dispose() {
     super.dispose();

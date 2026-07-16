@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../data/model/offers_response_model.dart';
+import '../../data/model/products_response_model.dart';
 import '../../data/repos/home_repository.dart';
 import 'home_state.dart';
 
@@ -9,15 +11,23 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future<void> fetchHomeData() async {
     emit(HomeLoading());
-    try {
-      final productsResponse = await _homeRepository.getProducts();
-      final offersResponse = await _homeRepository.getOffers();
 
-      emit(HomeSuccess(
-        products: productsResponse.items,
-        offers: offersResponse.items,
-        hasMoreProducts: productsResponse.hasNextPage,
-      ));
+    try {
+      final results = await Future.wait<dynamic>([
+        _homeRepository.getProducts(),
+        _homeRepository.getOffers(),
+      ]);
+
+      final productsResponse = results[0] as ProductsResponseModel;
+      final offersResponse = results[1] as OffersResponseModel;
+
+      emit(
+        HomeSuccess(
+          products: productsResponse.items,
+          offers: offersResponse.items,
+          hasMoreProducts: productsResponse.hasNextPage,
+        ),
+      );
     } catch (e) {
       emit(HomeError(e.toString()));
     }
@@ -26,6 +36,7 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> refreshHomeData() async {
     await fetchHomeData();
   }
+
 
   Future<void> fetchProductDetails(String productId) async {
     emit(ProductDetailsLoading());

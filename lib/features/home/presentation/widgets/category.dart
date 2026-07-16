@@ -1,19 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gangg_store/core/services/cache_helper.dart';
+import 'package:gangg_store/core/services/cache_keys.dart';
+import 'package:gangg_store/core/services/service_locators.dart';
 import 'package:gangg_store/core/theme/app_colors.dart';
 import 'package:gangg_store/core/theme/theme_cubit.dart';
 import 'package:gangg_store/core/utils/guest_guard.dart';
-import 'package:gangg_store/core/services/service_locators.dart';
+import 'package:gangg_store/features/category/presentation/cubit/category_cubit.dart';
+import 'package:gangg_store/features/category/presentation/cubit/category_stata.dart';
+import 'package:gangg_store/features/category/presentation/screens/category_screen.dart';
+import 'package:gangg_store/features/home/presentation/widgets/category_item.dart';
+import 'package:gangg_store/features/home/presentation/widgets/shimmer/category_loading_shimmer.dart';
 
-import '../../../../core/services/cache_helper.dart';
-import '../../../../core/services/cache_keys.dart';
-import '../../../category/presentation/cubit/category_cubit.dart';
-import '../../../category/presentation/cubit/category_stata.dart';
-import '../../../category/presentation/screens/category_screen.dart';
-import 'category_item.dart';
+import '../../../layout/presentation/screens/layout_screen.dart';
 
-class Category extends StatelessWidget {
+class Category extends StatefulWidget {
   const Category({super.key});
+
+  @override
+  State<Category> createState() => _CategoryState();
+}
+
+class _CategoryState extends State<Category> {
+  late final CategoryCubit cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    cubit = getIt<CategoryCubit>();
+    cubit.getCategories();
+  }
+
+  @override
+  void dispose() {
+    cubit.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +45,8 @@ class Category extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return BlocProvider(
-      create: (_) => getIt<CategoryCubit>()..getCategories(),
+    return BlocProvider.value(
+      value: cubit,
       child: const _CategoryView(),
     );
   }
@@ -55,12 +77,7 @@ class _CategoryView extends StatelessWidget {
                 GuestGuard.run(
                   context,
                   onAuthenticated: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const CategoryScreen(),
-                      ),
-                    );
+                    Layout.of(context)?.changeTab(1);
                   },
                 );
               },
@@ -75,25 +92,22 @@ class _CategoryView extends StatelessWidget {
             ),
           ],
         ),
-
         const SizedBox(height: 15),
 
         BlocBuilder<CategoryCubit, CategoryState>(
           builder: (context, state) {
             if (state is CategoryLoading) {
-              return const SizedBox(
-                height: 85,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
+              return const CategoryLoadingShimmer();
             }
 
             if (state is CategoryFailure) {
               return SizedBox(
                 height: 85,
                 child: Center(
-                  child: Text(state.error),
+                  child: Text(
+                    state.error,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               );
             }
@@ -114,14 +128,7 @@ class _CategoryView extends StatelessWidget {
                         GuestGuard.run(
                           context,
                           onAuthenticated: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => CategoryScreen(
-                                  // selectedCategory: category.name,
-                                ),
-                              ),
-                            );
+                            Layout.of(context)?.changeTab(1);
                           },
                         );
                       },

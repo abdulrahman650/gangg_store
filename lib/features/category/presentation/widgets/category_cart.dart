@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../core/theme/app_colors.dart';
+import 'package:gangg_store/core/theme/app_colors.dart';
 import 'package:shimmer/shimmer.dart';
+
 class CategoryCart extends StatelessWidget {
   final String? title;
   final String? subtitle;
@@ -24,7 +25,7 @@ class CategoryCart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextTheme text = Theme.of(context).textTheme;
+    final text = Theme.of(context).textTheme;
 
     return InkWell(
       onTap: onTap,
@@ -33,11 +34,11 @@ class CategoryCart extends StatelessWidget {
         height: height,
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: AppColors.primary.withOpacity(0.75),
+          color: AppColors.primary.withOpacity(.75),
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.12),
+              color: Colors.black.withOpacity(.12),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
@@ -45,19 +46,18 @@ class CategoryCart extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            if (imageAsset != null)
-              Positioned.fill(
-                child: Image.network(
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: imageAsset != null &&
+                    imageAsset!.isNotEmpty &&
+                    imageAsset!.startsWith("http")
+                    ? Image.network(
                   imageAsset!,
                   fit: BoxFit.cover,
-                  loadingBuilder: (
-                      BuildContext context,
-                      Widget child,
-                      ImageChunkEvent? loadingProgress,
-                      ) {
-                    if (loadingProgress == null) {
-                      return child;
-                    }
+                  loadingBuilder: (_, child, progress) {
+                    if (progress == null) return child;
+
                     return Shimmer.fromColors(
                       baseColor: Colors.grey.shade300,
                       highlightColor: Colors.grey.shade100,
@@ -67,32 +67,27 @@ class CategoryCart extends StatelessWidget {
                     );
                   },
                   errorBuilder: (_, __, ___) {
-                    return Container(
-                      color: Colors.grey.shade200,
-                      child: const Center(
-                        child: Icon(
-                          Icons.image_not_supported_outlined,
-                          size: 40,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    );
+                    return _buildPlaceholder();
                   },
-                ),
+                )
+                    : _buildPlaceholder(),
               ),
+            ),
 
-            if (svgAsset != null && imageAsset == null)
+            if (svgAsset != null &&
+                svgAsset!.isNotEmpty &&
+                (imageAsset == null || imageAsset!.isEmpty))
               Positioned(
                 top: isWide ? 12 : 18,
                 right: isWide ? 30 : 12,
                 child: Opacity(
-                  opacity: 0.25,
+                  opacity: .25,
                   child: SvgPicture.asset(
                     svgAsset!,
                     width: isWide ? 130 : 85,
                     height: isWide ? 130 : 85,
                     colorFilter: const ColorFilter.mode(
-                      AppColors.white,
+                      Colors.white,
                       BlendMode.srcIn,
                     ),
                   ),
@@ -101,13 +96,13 @@ class CategoryCart extends StatelessWidget {
 
             Positioned.fill(
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      AppColors.black.withOpacity(0.05),
-                      AppColors.black.withOpacity(0.70),
+                      Colors.transparent,
+                      Colors.black54,
                     ],
                   ),
                 ),
@@ -122,28 +117,51 @@ class CategoryCart extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title!,
+                    title ?? '',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: text.titleMedium?.copyWith(
-                      color: AppColors.white,
+                      color: Colors.white,
                       fontSize: isWide ? 18 : 15,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 3),
+                  const SizedBox(height: 4),
                   Text(
-                    subtitle!,
-                    maxLines: 1,
+                    subtitle ?? '',
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: text.titleSmall?.copyWith(
-                      color: AppColors.white.withOpacity(0.9),
-                      fontSize: isWide ? 11 : 9,
+                    style: text.bodySmall?.copyWith(
+                      color: Colors.white70,
+                      fontSize: isWide ? 12 : 10,
                     ),
                   ),
                 ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPlaceholder() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.grey.shade200,
+            Colors.grey.shade400,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: const Center(
+        child: Icon(
+          Icons.category_outlined,
+          color: Colors.white70,
+          size: 45,
         ),
       ),
     );

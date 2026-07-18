@@ -1,16 +1,31 @@
-# gangg_store
+## 👨‍🏫 Project Supervisor
 
-E-Commerce App
+**Eng. Karim Tamer**
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 👥 Team
 
-A few resources to get you started if this is your first Flutter project:
+This project was developed collaboratively by a team of 7 members. Each member was responsible for a specific feature while following the same architecture, coding standards, and Git workflow.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+| Team Member | Role & Responsibilities |
+|-------------|-------------------------|
+| **Abdulrahman Mohamed Shelby** *(Team Leader)* | Authentication feature, Network Layer (Dio), project architecture integration, file organization, team coordination, code review, and Git workflow management. |
+| **Khaled Gamal** | Home Screen & Product Details feature. |
+| **Amr Koshta** | Onboarding & Search feature. |
+| **Shahd Mohamed** | Wishlist & Reviews feature. |
+| **Shorouk Elkot** | Cart feature. |
+| **Ahmed Sawar** | Profile feature. |
+| **Ghada Salah** | Categories feature. |
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+### 🤝 Collaboration
+
+The project was developed using a collaborative workflow where:
+
+- Tasks were divided among team members.
+- Each feature was implemented in a separate branch.
+- Pull Requests were reviewed before merging.
+- The team followed the MVVM architecture and Cubit (BLoC) state management.
+- Git and GitHub were used for version control and team collaboration.
